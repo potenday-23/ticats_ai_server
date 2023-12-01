@@ -2,8 +2,8 @@
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 # fast-api
-from app.config.database import engine, SessionLocal, Base
-from app.routers import users as user_router
+from app.config.database_config import engine, SessionLocal, Base
+from app.routers import user_router as user_router
 
 app = FastAPI()
 

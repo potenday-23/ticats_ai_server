@@ -2,8 +2,8 @@
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 # Fast-api
-from app.models.users import User
-from app.schemas.users import UserRequestSchema
+from app.models.user_model import User
+from app.schemas.user_schema import UserRequestSchema
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")

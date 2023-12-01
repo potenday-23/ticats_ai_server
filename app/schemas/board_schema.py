@@ -3,7 +3,7 @@ from typing import List
 # third-party
 from pydantic import BaseModel
 # Fast-api
-from app.schemas.posts import PostResponseSchema
+from app.schemas.post_schema import PostResponseSchema
 
 
 class BoardRequestSchema(BaseModel):
