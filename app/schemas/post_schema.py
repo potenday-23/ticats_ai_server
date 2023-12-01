@@ -1,7 +1,5 @@
-# built-in
-from typing import List, Union
 # third-party
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 
 
 class PostRequestSchema(BaseModel):

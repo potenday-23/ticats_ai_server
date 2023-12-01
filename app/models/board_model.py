@@ -4,6 +4,7 @@ from app.config.database_config import Base
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
+
 class Board(Base):
     # Table Name
     __tablename__ = "boards"

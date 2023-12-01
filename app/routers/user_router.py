@@ -3,7 +3,6 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 # Fast-api
 from app.config.database_config import get_db
-from app.models import user_model
 from app.schemas.user_schema import UserResponseSchema
 from app.schemas.user_schema import UserRequestSchema
 from app.services import user_service

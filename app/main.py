@@ -1,18 +1,17 @@
 # tird-party
-from fastapi import Depends, FastAPI, HTTPException
-from sqlalchemy.orm import Session
+from fastapi import FastAPI
 # fast-api
 from app.config.database_config import engine, SessionLocal, Base
-from app.routers import user_router as user_router
+from app.routers import user_router
 
+# Root
 app = FastAPI()
 
+# DB 생성
 Base.metadata.create_all(bind=engine)
 
 # Router
 app.include_router(user_router.router)
-
-
 
 # @app.post("/users/", response_model=app.schemas.users.User)
 # def create_user(user: app.schemas.users.UserBase, db: Session = Depends(get_db)):
