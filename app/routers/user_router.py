@@ -9,13 +9,11 @@ from app.services import user_service
 
 router = APIRouter(
     prefix="/api/users",
+    tags=["계정 API"],
 )
 
 
-@router.post("", response_model=UserResponseSchema)
+@router.post("/sign-up", response_model=UserResponseSchema, summary="계정 Sign Up")
 def create_user(user: UserRequestSchema, db: Session = Depends(get_db)):
-    db_user = user_service.get_user_by_email(db, email=user.email)
-    if db_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
     return user_service.create_user(db=db, user=user)
 

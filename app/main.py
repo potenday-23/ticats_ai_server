@@ -2,7 +2,7 @@
 from fastapi import FastAPI
 # fast-api
 from app.config.database_config import engine, SessionLocal, Base
-from app.routers import user_router
+from app.routers import user_router, post_router, board_router
 
 # Root
 app = FastAPI()
@@ -12,6 +12,8 @@ Base.metadata.create_all(bind=engine)
 
 # Router
 app.include_router(user_router.router)
+app.include_router(post_router.router)
+app.include_router(board_router.router)
 
 # @app.post("/users/", response_model=app.schemas.users.User)
 # def create_user(user: app.schemas.users.UserBase, db: Session = Depends(get_db)):
