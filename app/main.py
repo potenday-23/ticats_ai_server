@@ -2,29 +2,24 @@
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 # fast-api
-from app.core.db import models, schemas, crud
-from app.core.db.base import engine, SessionLocal
-
-models.Base.metadata.create_all(bind=engine)
+from app.config.database import engine, SessionLocal, Base
+from app.routers import users as user_router
 
 app = FastAPI()
 
+Base.metadata.create_all(bind=engine)
 
-# 종속성 만들기 : 요청 당 독립적인 데이터베이스 세션/연결이 필요하고 요청이 완료되면 닫음
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+# Router
+app.include_router(user_router.router)
 
 
-@app.post("/users/", response_model=schemas.User)
-def create_user(user: schemas.UserBase, db: Session = Depends(get_db)):
-    db_user = crud.get_user_by_email(db, email=user.email)
-    if db_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
-    return crud.create_user(db=db, user=user)
+
+# @app.post("/users/", response_model=app.schemas.users.User)
+# def create_user(user: app.schemas.users.UserBase, db: Session = Depends(get_db)):
+#     db_user = app.services.users.get_user_by_email(db, email=user.email)
+#     if db_user:
+#         raise HTTPException(status_code=400, detail="Email already registered")
+#     return app.services.users.create_user(db=db, user=user)
 
 #
 # @app.get("/users/", response_model=List[schemas.User])

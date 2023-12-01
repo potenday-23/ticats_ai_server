@@ -1,9 +1,10 @@
 # third-party
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
+# Fast-api
+from app.models.users import User
+from app.schemas.users import UserRequestSchema
 
-# 기존에 생성한 모델과 스키마 불러오기
-from . import models, schemas
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -17,24 +18,24 @@ def verify_password(plain_password, hashed_password):
 
 # 데이터 읽기 - ID로 사용자 불러오기
 def get_user(db: Session, user_id: int):
-    return db.query(models.User).filter(models.User.id == user_id).first()
+    return db.query(User).filter(User.id == user_id).first()
 
 
 # 데이터 읽기 - Email로 사용자 불러오기
 def get_user_by_email(db: Session, email: str):
-    return db.query(models.User).filter(models.User.email == email).first()
+    return db.query(User).filter(User.email == email).first()
 
 
 # 데이터 읽기 - 여러 사용자 불러오기
 def get_users(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.User).offset(skip).limit(limit).all()
+    return db.query(User).offset(skip).limit(limit).all()
 
 
 # 데이터 생성하기
-def create_user(db: Session, user: schemas.UserBase):
+def create_user(db: Session, user: UserRequestSchema):
     hash_password = get_password_hash(user.password)
 
-    db_user = models.User(email=user.email, password=hash_password, full_name=user.full_name)
+    db_user = User(email=user.email, password=hash_password, full_name=user.full_name)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
