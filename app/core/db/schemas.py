@@ -1,40 +1,37 @@
+# built-in
 from typing import List, Union
-
-from pydantic import BaseModel
-
-
-# pydantic 라이브러리의 BaseModel 클래스를 상속 받아 ItemBase 생성 -> ":"를 사용하여 속성을 정의
-class ItemBase(BaseModel):
-    title: str
-    description: Union[str, None] = None
+# third-party
+from pydantic import BaseModel, EmailStr
 
 
-class ItemCreate(ItemBase):
-    pass
+class BoardBase(BaseModel):
+    name: str
+    public: bool
+    user_id: int
 
 
-# API에서 데이터를 읽을 때/반환할 때 사용될 모델
-class Item(ItemBase):
+class Board(BoardBase):
     id: int
-    owner_id: int
+    name: str
+    public: bool
+    user_id: int
 
     class Config:
         orm_mode = True
 
 
-# UserBase 생성
 class UserBase(BaseModel):
-    email: str
-
-
-class UserCreate(UserBase):
+    email: EmailStr
     password: str
+    full_name: str
 
 
 class User(UserBase):
     id: int
-    is_active: bool
-    items: List[Item] = []
+    email: str
+    password: str
+    full_name: str
+    boards: List[Board] = []
 
     class Config:
         orm_mode = True

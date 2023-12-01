@@ -1,33 +1,33 @@
-from sqlalchemy import Column, Integer, String, CHAR
-
+# Fast-API
 from app.core.db.base import Base
-
-
+# third-party
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 
-# Base를 상속 받아 SQLAlchemy model 생성
 class User(Base):
-    # 해당 모델이 사용할 table 이름 지정
+    # Table Name
     __tablename__ = "users"
 
-    # Model의 attribute(column) 생성 -> "="를 사용하여 속성을 정의
+    # Column
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True, index=True)
-    hashed_password = Column(String)
-    is_active = Column(Boolean, default=True)
+    password = Column(String)
+    full_name = Column(String)
 
-    # 다른 테이블과의 관계 생성
-    items = relationship("Item", back_populates="owner")
+    # FK
+    boards = relationship("Board", back_populates="user")
 
 
-class Item(Base):
-    __tablename__ = "items"
+class Board(Base):
+    # Table Name
+    __tablename__ = "boards"
 
+    # Column
     id = Column(Integer, primary_key=True, index=True)
-    title = Column(String, index=True)
-    description = Column(String, index=True)
-    owner_id = Column(Integer, ForeignKey("users.id"))
+    name = Column(String, index=True)
+    public = Column(Boolean, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
 
-    owner = relationship("User", back_populates="items")
+    # FK
+    user = relationship("User", back_populates="boards")
