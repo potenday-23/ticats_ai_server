@@ -3,8 +3,8 @@ from typing import List
 # third-party
 from pydantic import BaseModel, EmailStr
 # Fast-api
-from app.schemas.board_schema import BoardResponseSchema
-from app.schemas.post_schema import PostResponseSchema
+from api.schemas.board_schema import BoardResponseSchema
+from api.schemas.post_schema import PostResponseSchema
 
 
 class UserRequestSchema(BaseModel):

@@ -2,10 +2,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 # Fast-api
-from app.config.database_config import get_db
-from app.schemas.post_schema import PostResponseSchema
-from app.schemas.post_schema import PostRequestSchema
-from app.services import post_service
+from api.config.database_config import get_db
+from api.schemas.post_schema import PostResponseSchema
+from api.schemas.post_schema import PostRequestSchema
+from api.services import post_service
 
 router = APIRouter(
     prefix="/api/posts",

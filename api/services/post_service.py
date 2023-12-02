@@ -2,8 +2,8 @@
 from sqlalchemy.orm import Session
 
 # Fast-api
-from app.models.post_model import Post
-from app.schemas.post_schema import PostRequestSchema
+from api.models.post_model import Post
+from api.schemas.post_schema import PostRequestSchema
 
 
 # 데이터 읽기 - ID로 사용자 불러오기
@@ -25,14 +25,8 @@ def create_post(db: Session, post: PostRequestSchema):
     db.refresh(db_post)
     return db_post
 
-# # 데이터 읽기 - 여러 항목 읽어오기
-# def get_items(db: Session, skip: int = 0, limit: int = 100):
-#     return db.query(models.Item).offset(skip).limit(limit).all()
-#
-#
-# def create_post_item(db: Session, item: schemas.ItemCreate, post_id: int):
-#     db_item = models.Item(**item.dict(), owner_id=post_id)
-#     db.add(db_item)
-#     db.commit()
-#     db.refresh(db_item)
-#     return db_item
+
+# 데이터 삭제 - id로 게시글 삭제하기
+def delete_post_by_id(db: Session, post_id: int):
+    db.query(Post).filter(Post.id == post_id).delete()
+    db.commit()

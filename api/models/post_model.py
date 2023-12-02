@@ -1,5 +1,5 @@
 # Fast-API
-from app.config.database_config import Base
+from api.config.database_config import Base
 # third-party
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship

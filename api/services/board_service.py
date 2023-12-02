@@ -4,8 +4,9 @@ from passlib.context import CryptContext
 from fastapi import HTTPException
 
 # Fast-api
-from app.models.board_model import Board
-from app.schemas.board_schema import BoardRequestSchema
+from api.models.board_model import Board
+from api.schemas.board_schema import BoardRequestSchema
+
 
 # 데이터 읽기 - ID로 게시판 불러오기
 def get_board(db: Session, board_id: int):
@@ -27,14 +28,7 @@ def create_board(db: Session, board: BoardRequestSchema):
     return db_board
 
 
-# # 데이터 읽기 - 여러 항목 읽어오기
-# def get_items(db: Session, skip: int = 0, limit: int = 100):
-#     return db.query(models.Item).offset(skip).limit(limit).all()
-#
-#
-# def create_board_item(db: Session, item: schemas.ItemCreate, board_id: int):
-#     db_item = models.Item(**item.dict(), owner_id=board_id)
-#     db.add(db_item)
-#     db.commit()
-#     db.refresh(db_item)
-#     return db_item
+# 데이터 삭제 - id로 게시판 삭제하기
+def delete_board_by_id(db: Session, board_id: int):
+    db.query(Board).filter(Board.id == board_id).delete()
+    db.commit()
