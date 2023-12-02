@@ -10,7 +10,7 @@ from app.services.board_service import create_board, delete_board_by_id
 from app.services.post_service import delete_post_by_id
 from app.services.user_service import create_user, delete_user_by_id
 
-POST_ROUTER_PATH = "/app/posts"
+POST_ROUTER_PATH = "/api/posts"
 
 # 게시글 정보
 title = "About Soccer's Strategy"

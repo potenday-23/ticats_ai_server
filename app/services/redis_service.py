@@ -1,9 +1,11 @@
 # built-in
 import uuid
+import json
 from datetime import datetime, timedelta
 
 # fast-api
 from app.config.config import redis_client
+from app.config.exceptions import ApiException, ExceptionCode
 
 
 def create_session_id() -> str:
@@ -29,11 +31,23 @@ def save_session_to_redis(user_id: int) -> str:
     session_content = {
         "sessionId": session_id,
         "userId": user_id,
-        "expiresAt": datetime.now() + timedelta(weeks=2)
+        "expiresAt": (datetime.now() + timedelta(weeks=2)).strftime("%Y-%m-%d %H:%M:%S")
     }
 
     # redis 저장
     redis_key = "user::login::" + session_id
-    redis_client.set(redis_key, session_content.__str__(), 1209600)  # 2주
+    redis_client.set(redis_key, str(session_content), 1209600)  # 2주
 
     return redis_key
+
+
+def get_session_from_redis_key(redis_key: str):
+    cached_value = redis_client.get(redis_key)
+    if cached_value is not None:
+        return json.loads(cached_value.decode("utf-8").replace("'", '"'))
+    else:
+        raise ApiException(exception_code=ExceptionCode.TOKEN_NOT_VALID)
+
+
+def delete_session(redis_key: str):
+    redis_client.delete(redis_key)

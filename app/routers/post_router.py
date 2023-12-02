@@ -8,7 +8,7 @@ from app.schemas.post_schema import PostRequestSchema
 from app.services import post_service
 
 router = APIRouter(
-    prefix="/app/posts",
+    prefix="/api/posts",
     tags=["게시글 API"],
 )
 

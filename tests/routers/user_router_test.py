@@ -7,7 +7,7 @@ import pytest
 from app.services.user_service import delete_user_by_id, verify_password
 
 # 경로
-USER_ROUTER_PATH = "/app/users"
+USER_ROUTER_PATH = "/api/users"
 
 # 사용자 정보
 email = "emailtest@test.com"

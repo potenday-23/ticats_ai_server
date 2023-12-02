@@ -8,7 +8,7 @@ from app.schemas.user_schema import UserSignupRequestSchema
 from app.services.board_service import delete_board_by_id
 from app.services.user_service import create_user, delete_user_by_id
 
-BOARD_ROUTER_PATH = "/app/boards"
+BOARD_ROUTER_PATH = "/api/boards"
 
 # 게시판 정보
 name = "Movie"

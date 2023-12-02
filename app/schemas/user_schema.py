@@ -22,7 +22,6 @@ class UserLoginRequestSchema(BaseModel):
 class UserResponseSchema(BaseModel):
     id: int
     email: str
-    password: str
     full_name: str
     created_at: datetime
     updated_at: datetime

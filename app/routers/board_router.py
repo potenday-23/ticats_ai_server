@@ -8,7 +8,7 @@ from app.schemas.board_schema import BoardRequestSchema
 from app.services import board_service
 
 router = APIRouter(
-    prefix="/app/boards",
+    prefix="/api/boards",
     tags=["게시판 API"],
 )
 
