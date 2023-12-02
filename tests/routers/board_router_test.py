@@ -36,6 +36,7 @@ def test_create_board(client: TestClient, db: Session, user: User) -> None:
     # when
     r = client.post(BOARD_ROUTER_PATH, json=board_data)
     create_board = r.json()
+    delete_board_by_id(db, create_board["id"])
 
     # then
     assert r.status_code == 200
@@ -43,5 +44,3 @@ def test_create_board(client: TestClient, db: Session, user: User) -> None:
     assert create_board["public"] == public
     assert create_board["user_id"] == user.id
 
-    # After
-    delete_board_by_id(db, create_board["id"])

@@ -49,6 +49,7 @@ def test_create_post(client: TestClient, db: Session, user: User, board: Board) 
     # when
     r = client.post(POST_ROUTER_PATH, json=post_data)
     create_post = r.json()
+    delete_post_by_id(db, create_post["id"])
 
     # then
     assert r.status_code == 200
@@ -57,5 +58,3 @@ def test_create_post(client: TestClient, db: Session, user: User, board: Board) 
     assert create_post["user_id"] == user.id
     assert create_post["board_id"] == board.id
 
-    # After
-    delete_post_by_id(db, create_post["id"])

@@ -16,5 +16,4 @@ router = APIRouter(
 
 @router.post("/sign-up", response_model=UserResponseSchema, summary="계정 Sign Up")
 def create_user(user: UserRequestSchema, db: Session = Depends(get_db)):
-    raise ApiException(exception_code=ExceptionCode.USER_NOT_FOUND)
     return user_service.create_user(db=db, user=user)
