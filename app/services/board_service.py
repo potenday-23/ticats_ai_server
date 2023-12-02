@@ -3,9 +3,9 @@ from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from fastapi import HTTPException
 
-# Fast-api
-from api.models.board_model import Board
-from api.schemas.board_schema import BoardRequestSchema
+# Fast-app
+from app.models.board_model import Board
+from app.schemas.board_schema import BoardRequestSchema
 
 
 # 데이터 읽기 - ID로 게시판 불러오기

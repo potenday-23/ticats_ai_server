@@ -3,9 +3,9 @@ from typing import Generator
 # third-party
 from fastapi.testclient import TestClient
 import pytest
-# fast-api
-from api.config.database_config import SessionLocal
-from api.main import app
+# fast-app
+from app.config.database_config import SessionLocal
+from app.main import app
 
 
 @pytest.fixture(scope="session")

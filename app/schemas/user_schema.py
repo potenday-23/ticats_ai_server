@@ -1,10 +1,11 @@
 # built-in
+from datetime import datetime
 from typing import List
 # third-party
 from pydantic import BaseModel, EmailStr
-# Fast-api
-from api.schemas.board_schema import BoardResponseSchema
-from api.schemas.post_schema import PostResponseSchema
+# Fast-app
+from app.schemas.board_schema import BoardResponseSchema
+from app.schemas.post_schema import PostResponseSchema
 
 
 class UserRequestSchema(BaseModel):
@@ -18,6 +19,8 @@ class UserResponseSchema(UserRequestSchema):
     email: str
     password: str
     full_name: str
+    created_at: datetime
+    updated_at: datetime
     boards: List[BoardResponseSchema] = []
     posts: List[PostResponseSchema] = []
 

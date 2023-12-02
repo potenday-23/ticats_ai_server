@@ -2,15 +2,15 @@
 from sqlalchemy.orm import Session
 from fastapi.testclient import TestClient
 import pytest
-# Fast-api
-from api.models import User, Board
-from api.schemas.board_schema import BoardRequestSchema
-from api.schemas.user_schema import UserRequestSchema
-from api.services.board_service import create_board, delete_board_by_id
-from api.services.post_service import delete_post_by_id
-from api.services.user_service import create_user, delete_user_by_id
+# Fast-app
+from app.models import User, Board
+from app.schemas.board_schema import BoardRequestSchema
+from app.schemas.user_schema import UserRequestSchema
+from app.services.board_service import create_board, delete_board_by_id
+from app.services.post_service import delete_post_by_id
+from app.services.user_service import create_user, delete_user_by_id
 
-POST_ROUTER_PATH = "/api/posts"
+POST_ROUTER_PATH = "/app/posts"
 
 # 게시글 정보
 title = "About Soccer's Strategy"

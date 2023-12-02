@@ -1,9 +1,9 @@
 # third-party
 from sqlalchemy.orm import Session
 
-# Fast-api
-from api.models.post_model import Post
-from api.schemas.post_schema import PostRequestSchema
+# Fast-app
+from app.models.post_model import Post
+from app.schemas.post_schema import PostRequestSchema
 
 
 # 데이터 읽기 - ID로 사용자 불러오기

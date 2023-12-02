@@ -1,14 +1,14 @@
 # third-party
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-# Fast-api
-from api.config.database_config import get_db
-from api.schemas.user_schema import UserResponseSchema
-from api.schemas.user_schema import UserRequestSchema
-from api.services import user_service
+# Fast-app
+from app.config.database_config import get_db
+from app.schemas.user_schema import UserResponseSchema
+from app.schemas.user_schema import UserRequestSchema
+from app.services import user_service
 
 router = APIRouter(
-    prefix="/api/users",
+    prefix="/app/users",
     tags=["계정 API"],
 )
 

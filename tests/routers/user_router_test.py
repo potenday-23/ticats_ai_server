@@ -3,11 +3,11 @@ from sqlalchemy.orm import Session
 from fastapi.testclient import TestClient
 import pytest
 
-# fast-api
-from api.services.user_service import delete_user_by_id
+# fast-app
+from app.services.user_service import delete_user_by_id
 
 # 경로
-USER_ROUTER_PATH = "/api/users"
+USER_ROUTER_PATH = "/app/users"
 
 # 사용자 정보
 email = "emailtest@exampletest.com"

@@ -1,14 +1,14 @@
 # third-party
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-# Fast-api
-from api.config.database_config import get_db
-from api.schemas.board_schema import BoardResponseSchema
-from api.schemas.board_schema import BoardRequestSchema
-from api.services import board_service
+# Fast-app
+from app.config.database_config import get_db
+from app.schemas.board_schema import BoardResponseSchema
+from app.schemas.board_schema import BoardRequestSchema
+from app.services import board_service
 
 router = APIRouter(
-    prefix="/api/boards",
+    prefix="/app/boards",
     tags=["게시판 API"],
 )
 
