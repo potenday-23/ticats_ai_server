@@ -1,7 +1,7 @@
 # built-in
 from datetime import datetime
 # fast-api
-from app.config.database_config import Base
+from app.config.database import Base
 # third-party
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 from sqlalchemy.orm import relationship
