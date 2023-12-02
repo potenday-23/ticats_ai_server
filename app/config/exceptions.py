@@ -19,6 +19,13 @@ class ExceptionCode:
 
     # USER
     USER_NOT_FOUND = (StatusCode.HTTP_400, "U001", "해당 id의 사용자가 없습니다.")
+    USER_EMAIL_DUPLICATE = (StatusCode.HTTP_400, "U002", "해당 이메일은 이미 사용중입니다.")
+
+    # BOARD
+    BOARD_NOT_FOUND = (StatusCode.HTTP_400, "B001", "해당 id의 게시판이 없습니다.")
+
+    # POST
+    POST_NOT_FOUND = (StatusCode.HTTP_400, "P001", "해당 id의 게시글이 없습니다.")
 
 
 class ApiException(HTTPException):

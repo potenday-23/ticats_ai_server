@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from fastapi import HTTPException
 # Fast-app
+from app.config.exceptions import ApiException, ExceptionCode
 from app.models.user_model import User
 from app.schemas.user_schema import UserRequestSchema
 
@@ -40,7 +41,7 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
 def create_user(db: Session, user: UserRequestSchema):
     # email 중복 검사
     if get_user_by_email(db, email=user.email):
-        raise HTTPException(status_code=400, detail="Email already registered")
+        raise ApiException(exception_code=ExceptionCode.USER_EMAIL_DUPLICATE)
 
     # password 암호화
     # hash_password = get_password_hash(user.password)

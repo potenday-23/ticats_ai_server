@@ -3,7 +3,7 @@ from typing import Generator
 # third-party
 from fastapi.testclient import TestClient
 import pytest
-# fast-app
+# fast-api
 from app.config.database import SessionLocal
 from app.main import app
 
