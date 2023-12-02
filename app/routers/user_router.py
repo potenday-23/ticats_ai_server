@@ -1,11 +1,9 @@
 # third-party
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response
 from sqlalchemy.orm import Session
 # Fast-app
-from app.config.database import get_db
-from app.config.exceptions import ApiException, StatusCode, ExceptionCode
-from app.schemas.user_schema import UserResponseSchema
-from app.schemas.user_schema import UserRequestSchema
+from app.config.config import get_db
+from app.schemas.user_schema import UserResponseSchema, UserSignupRequestSchema, UserLoginRequestSchema
 from app.services import user_service
 
 router = APIRouter(
@@ -14,6 +12,14 @@ router = APIRouter(
 )
 
 
-@router.post("/sign-up", response_model=UserResponseSchema, summary="계정 Sign Up")
-def create_user(user: UserRequestSchema, db: Session = Depends(get_db)):
+@router.post("/signup", response_model=UserResponseSchema, summary="계정 Signup")
+def create_user(user: UserSignupRequestSchema, db: Session = Depends(get_db)):
     return user_service.create_user(db=db, user=user)
+
+
+@router.post("/login", summary="계정 Login")
+def login_user(user: UserLoginRequestSchema, db: Session = Depends(get_db), response: Response = Response()):
+    access_token = user_service.login_user(db=db, user=user)
+    response.set_cookie(key="AccessToken", value=access_token)
+    response.headers["AccessToken"] = access_token
+    return None

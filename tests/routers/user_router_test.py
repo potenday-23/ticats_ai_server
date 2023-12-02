@@ -24,7 +24,7 @@ def test_create_user(client: TestClient, db: Session) -> None:
     }
 
     # when
-    r = client.post(USER_ROUTER_PATH + "/sign-up", json=sign_up_data)
+    r = client.post(USER_ROUTER_PATH + "/signup", json=sign_up_data)
     sign_up_user = r.json()
     delete_user_by_id(db, sign_up_user["id"])
 

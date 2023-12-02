@@ -5,11 +5,15 @@ from sqlalchemy.orm import Session
 import bcrypt
 # Fast-app
 from app.config.exceptions import ApiException, ExceptionCode
+from app.config.config import redis_client
 from app.models.user_model import User
-from app.schemas.user_schema import UserRequestSchema
-
+from app.schemas.user_schema import UserSignupRequestSchema, UserLoginRequestSchema
 
 # password 암호화
+from app.services.jwt_service import create_access_token
+from app.services.redis_service import create_session_id, save_session_to_redis
+
+
 def get_password_hash(password) -> str:
     return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
@@ -35,7 +39,7 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
 
 
 # 데이터 생성하기
-def create_user(db: Session, user: UserRequestSchema):
+def create_user(db: Session, user: UserSignupRequestSchema):
     # email 중복 검사
     if get_user_by_email(db, email=user.email):
         raise ApiException(exception_code=ExceptionCode.USER_EMAIL_DUPLICATE)
@@ -49,6 +53,26 @@ def create_user(db: Session, user: UserRequestSchema):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+
+# 로그인하기
+def login_user(db: Session, user: UserLoginRequestSchema):
+    # email로 찾기
+    find_user = get_user_by_email(db, user.email)
+
+    # email, password 유효성 검사
+    is_email_valid = find_user is None
+    is_password_valid = not verify_password(user.password, find_user.password)
+    if is_email_valid or is_password_valid:
+        raise ApiException(ExceptionCode.USER_NOT_VALID)
+
+    # redis에 session 저장
+    redis_key = save_session_to_redis(find_user.id)
+
+    # session_id를 jwt 토큰으로 변환
+    access_token = create_access_token(redis_key)
+
+    return access_token
 
 
 # 데이터 삭제 - id로 사용자 삭제하기

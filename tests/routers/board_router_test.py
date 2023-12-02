@@ -4,7 +4,7 @@ from fastapi.testclient import TestClient
 import pytest
 # Fast-app
 from app.models import User
-from app.schemas.user_schema import UserRequestSchema
+from app.schemas.user_schema import UserSignupRequestSchema
 from app.services.board_service import delete_board_by_id
 from app.services.user_service import create_user, delete_user_by_id
 
@@ -17,9 +17,9 @@ public = True
 
 @pytest.fixture(scope="module")
 def user(db: Session):
-    user_request_schema = UserRequestSchema(email="testemail@test.com",
-                                            password="testpassword",
-                                            full_name="testfullname")
+    user_request_schema = UserSignupRequestSchema(email="testemail@test.com",
+                                                  password="testpassword",
+                                                  full_name="testfullname")
     user = create_user(db, user_request_schema)
     yield user
     delete_user_by_id(db, user.id)
@@ -43,4 +43,3 @@ def test_create_board(client: TestClient, db: Session, user: User) -> None:
     assert create_board["name"] == name
     assert create_board["public"] == public
     assert create_board["user_id"] == user.id
-

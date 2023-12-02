@@ -4,7 +4,7 @@ from typing import Generator
 from fastapi.testclient import TestClient
 import pytest
 # fast-api
-from app.config.database import SessionLocal
+from app.config.config import SessionLocal
 from app.main import app
 
 

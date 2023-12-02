@@ -8,13 +8,18 @@ from app.schemas.board_schema import BoardResponseSchema
 from app.schemas.post_schema import PostResponseSchema
 
 
-class UserRequestSchema(BaseModel):
+class UserSignupRequestSchema(BaseModel):
     email: EmailStr
     password: str
     full_name: str
 
 
-class UserResponseSchema(UserRequestSchema):
+class UserLoginRequestSchema(BaseModel):
+    email: EmailStr
+    password: str
+
+
+class UserResponseSchema(BaseModel):
     id: int
     email: str
     password: str

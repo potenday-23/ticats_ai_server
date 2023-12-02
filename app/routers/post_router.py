@@ -2,7 +2,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 # Fast-app
-from app.config.database import get_db
+from app.config.config import get_db
 from app.schemas.post_schema import PostResponseSchema
 from app.schemas.post_schema import PostRequestSchema
 from app.services import post_service
