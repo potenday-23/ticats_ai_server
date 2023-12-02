@@ -1,7 +1,7 @@
 # tird-party
 from fastapi import FastAPI
 # fast-api
-from app.config.database import engine, SessionLocal, Base
+from app.config.config import engine, SessionLocal, Base
 from app.routers import user_router, post_router, board_router
 
 # Root
@@ -14,6 +14,7 @@ Base.metadata.create_all(bind=engine)
 app.include_router(user_router.router)
 app.include_router(post_router.router)
 app.include_router(board_router.router)
+
 
 #
 # @app.get("/users/", response_model=List[schemas.User])

@@ -1,20 +1,35 @@
 # third-party
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response, Request
 from sqlalchemy.orm import Session
 # Fast-app
-from app.config.database import get_db
-from app.config.exceptions import ApiException, StatusCode, ExceptionCode
-from app.schemas.user_schema import UserResponseSchema
-from app.schemas.user_schema import UserRequestSchema
+from app.config.config import get_db
+from app.schemas.user_schema import UserResponseSchema, UserSignupRequestSchema, UserLoginRequestSchema
 from app.services import user_service
+from app.services.user_service import get_user_by_access_token, logout_by_access_token
 
 router = APIRouter(
-    prefix="/app/users",
+    prefix="/api/users",
     tags=["계정 API"],
 )
 
 
-@router.post("/sign-up", response_model=UserResponseSchema, summary="계정 Sign Up")
-def create_user(user: UserRequestSchema, db: Session = Depends(get_db)):
-    raise ApiException(exception_code=ExceptionCode.USER_NOT_FOUND)
+@router.post("/signup", response_model=UserResponseSchema, summary="계정 Signup")
+def create_user(user: UserSignupRequestSchema, db: Session = Depends(get_db)):
     return user_service.create_user(db=db, user=user)
+
+
+@router.post("/login", summary="계정 Login", status_code=204)
+def login_user(user: UserLoginRequestSchema, db: Session = Depends(get_db), response: Response = Response):
+    access_token = user_service.login_user(db=db, user=user)
+    response.set_cookie(key="AccessToken", value=access_token)  # todo : cookie의 만료기간 설정하기
+    response.headers["AccessToken"] = access_token
+
+
+@router.get("", response_model=UserResponseSchema, summary="AccessToken으로 사용자 찾기")
+def get_user(db: Session = Depends(get_db), request: Request = Request):
+    return get_user_by_access_token(db=db, access_token=request.headers.get("Authorization"))
+
+
+@router.post("/logout", summary="AccessToken으로 로그아웃하기", status_code=204)
+def logout_user(db: Session = Depends(get_db), request: Request = Request):
+    logout_by_access_token(db=db, access_token=request.headers.get("Authorization"))

@@ -4,18 +4,17 @@ from fastapi.testclient import TestClient
 import pytest
 
 # fast-api
-from app.services.user_service import delete_user_by_id
+from app.services.user_service import delete_user_by_id, verify_password
 
 # 경로
-USER_ROUTER_PATH = "/app/users"
+USER_ROUTER_PATH = "/api/users"
 
 # 사용자 정보
-email = "emailtest@exampletest.com"
+email = "emailtest@test.com"
 password = "passwordtest"
 full_name = "fullnametest"
 
 
-# todo : 비밀번호 인코딩시 assert문을 바꿔주어야 함
 def test_create_user(client: TestClient, db: Session) -> None:
     # given
     sign_up_data = {
@@ -25,14 +24,12 @@ def test_create_user(client: TestClient, db: Session) -> None:
     }
 
     # when
-    r = client.post(USER_ROUTER_PATH + "/sign-up", json=sign_up_data)
+    r = client.post(USER_ROUTER_PATH + "/signup", json=sign_up_data)
     sign_up_user = r.json()
+    delete_user_by_id(db, sign_up_user["id"])
 
     # then
     assert r.status_code == 200
     assert sign_up_user["email"] == email
-    assert sign_up_user["password"] == password
+    assert verify_password(password, sign_up_user["password"]) == True
     assert sign_up_user["full_name"] == full_name
-
-    # After
-    delete_user_by_id(db, sign_up_user["id"])
