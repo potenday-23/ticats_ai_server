@@ -23,7 +23,7 @@ def create_access_token(session_id: str, expires_delta: Optional[timedelta] = No
 def get_redis_key(access_token: str) -> str:
     try:
         # redis_key 추출
-        payload = jwt.decode(access_token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(access_token.replace("Baerer ", ""), SECRET_KEY, algorithms=[ALGORITHM])
         redis_key = payload.get("sub")
         if redis_key is None:
             raise JWTError()
