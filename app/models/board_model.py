@@ -3,8 +3,8 @@ from datetime import datetime
 # third-party
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime
 from sqlalchemy.orm import relationship
-# fast-app
-from app.config.database_config import Base
+# fast-api
+from app.config.database import Base
 
 
 class Board(Base):

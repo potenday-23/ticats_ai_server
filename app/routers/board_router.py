@@ -2,7 +2,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 # Fast-app
-from app.config.database_config import get_db
+from app.config.database import get_db
 from app.schemas.board_schema import BoardResponseSchema
 from app.schemas.board_schema import BoardRequestSchema
 from app.services import board_service

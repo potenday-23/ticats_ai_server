@@ -1,7 +1,7 @@
 # tird-party
 from fastapi import FastAPI
-# fast-app
-from app.config.database_config import engine, SessionLocal, Base
+# fast-api
+from app.config.database import engine, SessionLocal, Base
 from app.routers import user_router, post_router, board_router
 
 # Root

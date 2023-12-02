@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from fastapi.testclient import TestClient
 import pytest
 
-# fast-app
+# fast-api
 from app.services.user_service import delete_user_by_id
 
 # 경로
