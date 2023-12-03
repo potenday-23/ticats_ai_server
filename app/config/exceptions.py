@@ -34,6 +34,9 @@ class ExceptionCode:
     # POST
     POST_NOT_FOUND = (StatusCode.HTTP_400, "P001", "해당 id의 게시글이 없습니다.")
 
+    # VALIDATION
+    VALIDATION_NOT_BLANK = (StatusCode.HTTP_422, "V422", "공백으로 이루어진 문자는 입력할 수 없습니다.")
+
 
 class ApiException(HTTPException):
     """
@@ -58,6 +61,6 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     return JSONResponse(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                         content={"status_code": 422,
                                  "code": "C422",
-                                 "message": details[0]["msg"]
+                                 "message": details[0]["loc"][1] + " -> " + details[0]["msg"]
                                  }
                         )
