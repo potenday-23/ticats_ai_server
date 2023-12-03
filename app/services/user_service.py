@@ -7,7 +7,7 @@ import bcrypt
 from app.config.exceptions import ApiException, ExceptionCode
 from app.models.user_model import User
 from app.schemas.user_schema import UserSignupRequestSchema, UserLoginRequestSchema
-from app.services.jwt_service import create_access_token, get_user_id, get_redis_key
+from app.services.jwt_service import create_access_token, get_user_id, get_sub_from_access_token
 from app.services.redis_service import create_session_id, save_session_to_redis, delete_session
 
 
@@ -82,7 +82,7 @@ def get_user_by_access_token(db: Session, access_token: str):
 # AccessToken으로 로그아웃 하기
 def logout_by_access_token(db: Session, access_token: str):
     # 로그아웃
-    redis_key = get_redis_key(access_token)
+    redis_key = get_sub_from_access_token(access_token)
     delete_session(redis_key)
 
 

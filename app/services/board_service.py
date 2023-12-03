@@ -19,7 +19,7 @@ def get_boards(db: Session, skip: int = 0, limit: int = 100):
 
 
 # 데이터 생성하기
-def create_board(db: Session, board: BoardRequestSchema):
+def create_board(db: Session, board: BoardRequestSchema, access_token: str):
     # Board 저장
     db_board = Board(name=board.name, public=board.public, user_id=board.user_id)
     db.add(db_board)

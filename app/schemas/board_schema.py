@@ -10,7 +10,6 @@ from app.schemas.post_schema import PostResponseSchema
 class BoardRequestSchema(BaseModel):
     name: str
     public: bool
-    user_id: int
 
 
 class BoardResponseSchema(BoardRequestSchema):
