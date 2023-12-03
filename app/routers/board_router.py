@@ -17,3 +17,9 @@ router = APIRouter(
 @router.post("", response_model=BoardResponseSchema, summary="게시판 Create")
 def create_board(board: BoardRequestSchema, db: Session = Depends(get_db), user_id: int = Depends(UserIdProvider())):
     return board_service.create_board(db=db, board=board, user_id=user_id)
+
+
+@router.put("/{board_id}", response_model=BoardResponseSchema, summary="게시판 Update")
+def update_board(board: BoardRequestSchema, db: Session = Depends(get_db), board_id: int = None,
+                 user_id: int = Depends(UserIdProvider())):
+    return board_service.update_board(db=db, board=board, board_id=board_id, user_id=user_id)
