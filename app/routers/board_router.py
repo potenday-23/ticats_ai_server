@@ -28,3 +28,8 @@ def update_board(board: BoardRequestSchema, db: Session = Depends(get_db), board
 @router.delete("/{board_id}", status_code=204, summary="게시판 Delete")
 def update_board(db: Session = Depends(get_db), board_id: int = None, user_id: int = Depends(UserIdProvider())):
     board_service.delete_board(db=db, board_id=board_id, user_id=user_id)
+
+
+@router.get("/{board_id}", response_model=BoardResponseSchema, summary="게시판 Get(1개)")
+def update_board(db: Session = Depends(get_db), board_id: int = None, user_id: int = Depends(UserIdProvider())):
+    return board_service.get_board(db=db, board_id=board_id, user_id=user_id)
