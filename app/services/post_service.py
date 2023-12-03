@@ -38,15 +38,8 @@ def create_post(db: Session, post: PostRequestSchema, user_id: int):
     return db_post
 
 
-# 데이터 삭제 - id로 게시글 삭제하기
-def delete_post_by_id(db: Session, post_id: int):
-    db.query(Post).filter(Post.id == post_id).delete()
-    db.commit()
-
-
 # 데이터 수정하기
 def update_post(db: Session, post: PostUpdateRequestSchema, post_id: int, user_id: int):
-
     db_post = get_post_by_id(db, post_id)
 
     # 내 Post인지 검증
@@ -60,3 +53,21 @@ def update_post(db: Session, post: PostUpdateRequestSchema, post_id: int, user_i
     db.add(db_post)
     db.commit()
     return db_post
+
+
+# 데이터 삭제
+def delete_post(db: Session, post_id: int, user_id: int):
+    db_post = db.query(Post).filter(Post.id == post_id)
+
+    # 내 Post인지 검증
+    if db_post.first().user_id != user_id:
+        raise ApiException(exception_code=ExceptionCode.POST_CANT_UPDATE)
+
+    db_post.delete()
+    db.commit()
+
+
+# 데이터 삭제 - id로 게시글 삭제하기
+def delete_post_by_id(db: Session, post_id: int):
+    db.query(Post).filter(Post.id == post_id).delete()
+    db.commit()
