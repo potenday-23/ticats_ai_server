@@ -1,7 +1,7 @@
 # third-party
-from enum import Enum
-
-from fastapi import HTTPException
+from fastapi import HTTPException, status, Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 
 
 class StatusCode:
@@ -11,6 +11,7 @@ class StatusCode:
     HTTP_403 = 403
     HTTP_404 = 404
     HTTP_405 = 405
+    HTTP_422 = 422
 
 
 class ExceptionCode:
@@ -29,9 +30,14 @@ class ExceptionCode:
 
     # BOARD
     BOARD_NOT_FOUND = (StatusCode.HTTP_400, "B001", "해당 id의 게시판이 없습니다.")
+    BOARD_CANT_UPDATE = (StatusCode.HTTP_400, "B002", "내 게시판만 수정하거나 삭제할 수 있습니다.")
+    BOARD_CANT_GET = (StatusCode.HTTP_400, "B003", "내 게시판 또는 전체공개 게시판만 조회할 수 있습니다.")
 
     # POST
     POST_NOT_FOUND = (StatusCode.HTTP_400, "P001", "해당 id의 게시글이 없습니다.")
+
+    # VALIDATION
+    VALIDATION_NOT_BLANK = (StatusCode.HTTP_422, "V422", "공백으로 이루어진 문자는 입력할 수 없습니다.")
 
 
 class ApiException(HTTPException):
@@ -50,3 +56,13 @@ class ApiException(HTTPException):
                 "message": exception_code[2]
             }
         )
+
+
+async def validation_exception_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
+    details = exc.errors()
+    return JSONResponse(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                        content={"status_code": 422,
+                                 "code": "C422",
+                                 "message": details[0]["loc"][1] + " -> " + details[0]["msg"]
+                                 }
+                        )

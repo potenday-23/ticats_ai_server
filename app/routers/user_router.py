@@ -22,7 +22,7 @@ def create_user(user: UserSignupRequestSchema, db: Session = Depends(get_db)):
 @router.post("/login", summary="계정 Login", status_code=204)
 def login_user(user: UserLoginRequestSchema, db: Session = Depends(get_db), response: Response = Response):
     access_token = user_service.login_user(db=db, user=user)
-    response.set_cookie(key="AccessToken", value=access_token, expires=14)  # todo : cookie의 만료기간 설정하기
+    response.set_cookie(key="AccessToken", value=access_token, expires=14)
     response.headers["AccessToken"] = access_token
 
 

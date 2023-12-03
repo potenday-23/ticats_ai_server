@@ -2,7 +2,9 @@
 from fastapi import FastAPI
 # fast-api
 from app.config.config import engine, SessionLocal, Base
+from app.config.exceptions import validation_exception_handler
 from app.routers import user_router, post_router, board_router
+from fastapi.exceptions import RequestValidationError
 
 # Root
 app = FastAPI()
@@ -14,6 +16,9 @@ Base.metadata.create_all(bind=engine)
 app.include_router(user_router.router)
 app.include_router(post_router.router)
 app.include_router(board_router.router)
+
+# exception Handler
+app.add_exception_handler(RequestValidationError, validation_exception_handler)
 
 
 #

@@ -19,9 +19,22 @@ class AuthProvider:
         if not authorization:
             raise ApiException(exception_code=ExceptionCode.AUTHORIZATION_EMPTY)
         # "Baerer"형식이 아닐 때
-        if authorization[:8] is not "Baerer ":
+        if authorization[:7] is not "Baerer ":
             raise ApiException(exception_code=ExceptionCode.TOKEN_NOT_VALID)
         return authorization
+
+
+class UserIdProvider:
+    async def __call__(self, req: Request):
+        authorization: str = req.headers.get('authorization')
+        # authorization 토큰 없을 때
+        if not authorization:
+            raise ApiException(exception_code=ExceptionCode.AUTHORIZATION_EMPTY)
+        # "Baerer"형식이 아닐 때
+        if authorization[:7] != "Baerer ":
+            print(authorization[:7])
+            raise ApiException(exception_code=ExceptionCode.TOKEN_NOT_VALID)
+        return get_user_id(authorization)
 
 
 def create_access_token(session_id: str, expires_delta: Optional[timedelta] = None) -> str:
@@ -37,7 +50,8 @@ def create_access_token(session_id: str, expires_delta: Optional[timedelta] = No
 def get_sub_from_access_token(access_token: str) -> str:
     try:
         # redis_key 추출
-        payload = jwt.decode(access_token.replace("Baerer ", ""), SECRET_KEY, algorithms=[ALGORITHM])
+        access_token = access_token.replace("Baerer ", "").replace(" ", "")
+        payload = jwt.decode(access_token, SECRET_KEY, algorithms=[ALGORITHM])
         redis_key = payload.get("sub")
         if redis_key is None:
             raise JWTError()
