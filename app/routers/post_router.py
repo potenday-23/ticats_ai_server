@@ -18,3 +18,7 @@ router = APIRouter(
 def create_post(post: PostRequestSchema, db: Session = Depends(get_db), user_id: int = Depends(UserIdProvider())):
     return post_service.create_post(db=db, post=post, user_id=user_id)
 
+
+@router.put("", response_model=PostResponseSchema, summary="게시글 Create")
+def create_post(post: PostRequestSchema, db: Session = Depends(get_db), user_id: int = Depends(UserIdProvider())):
+    return post_service.create_post(db=db, post=post, user_id=user_id)
