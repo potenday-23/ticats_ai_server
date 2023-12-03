@@ -41,7 +41,6 @@ def create_post(db: Session, post: PostRequestSchema, user_id: int):
 # 데이터 수정하기
 def update_post(db: Session, post: PostUpdateRequestSchema, post_id: int, user_id: int):
     db_post = get_post_by_id(db, post_id)
-
     # 내 Post인지 검증
     if db_post.user_id != user_id:
         raise ApiException(exception_code=ExceptionCode.POST_CANT_UPDATE)
@@ -57,14 +56,24 @@ def update_post(db: Session, post: PostUpdateRequestSchema, post_id: int, user_i
 
 # 데이터 삭제
 def delete_post(db: Session, post_id: int, user_id: int):
-    db_post = db.query(Post).filter(Post.id == post_id)
+    db_post = get_post_by_id(db, post_id)
 
     # 내 Post인지 검증
-    if db_post.first().user_id != user_id:
+    if db_post.user_id != user_id:
         raise ApiException(exception_code=ExceptionCode.POST_CANT_UPDATE)
 
-    db_post.delete()
+    db.query(Post).filter(Post.id == post_id).delete()
     db.commit()
+
+
+# 데이터 조회
+def get_post(db: Session, post_id: int, user_id: int):
+    # 내 게시판, 전체공개 게시판 검증
+    post = get_post_by_id(db, post_id)
+    if post.board.user_id != user_id and post.board.public == False:
+        raise ApiException(exception_code=ExceptionCode.POST_BOARD_UNAUTHORIZATION)
+
+    return post
 
 
 # 데이터 삭제 - id로 게시글 삭제하기

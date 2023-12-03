@@ -26,5 +26,10 @@ def update_post(post: PostUpdateRequestSchema, db: Session = Depends(get_db), po
 
 
 @router.delete("/{post_id}", status_code=204, summary="게시글 Delete")
-def update_post(db: Session = Depends(get_db), post_id: int = None, user_id: int = Depends(UserIdProvider())):
+def delete_post(db: Session = Depends(get_db), post_id: int = None, user_id: int = Depends(UserIdProvider())):
     post_service.delete_post(db=db, post_id=post_id, user_id=user_id)
+
+
+@router.get("/{post_id}", response_model=PostResponseSchema, summary="게시글 Get(1건)")
+def get_post(db: Session = Depends(get_db), post_id: int = None, user_id: int = Depends(UserIdProvider())):
+    return post_service.get_post(db=db, post_id=post_id, user_id=user_id)
