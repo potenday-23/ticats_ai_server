@@ -7,7 +7,6 @@ from pydantic import BaseModel
 class PostRequestSchema(BaseModel):
     title: str
     content: str
-    user_id: int
     board_id: int
 
 
