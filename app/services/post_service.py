@@ -1,18 +1,21 @@
 # third-party
+from datetime import datetime
+
 from sqlalchemy.orm import Session
 
 # Fast-app
 from app.config.exceptions import ApiException, ExceptionCode
 from app.models.post_model import Post
-from app.schemas.post_schema import PostRequestSchema
+from app.schemas.post_schema import PostRequestSchema, PostUpdateRequestSchema
 
-
-# 데이터 읽기 - ID로 사용자 불러오기
 from app.services.board_service import get_board_by_id
 
 
-def get_post(db: Session, post_id: int):
-    return db.query(Post).filter(Post.id == post_id).first()
+def get_post_by_id(db: Session, post_id: int):
+    post = db.query(Post).filter(Post.id == post_id).first()
+    if not post:
+        raise ApiException(exception_code=ExceptionCode.POST_NOT_FOUND)
+    return post
 
 
 # 데이터 읽기 - 여러 사용자 불러오기
@@ -39,3 +42,21 @@ def create_post(db: Session, post: PostRequestSchema, user_id: int):
 def delete_post_by_id(db: Session, post_id: int):
     db.query(Post).filter(Post.id == post_id).delete()
     db.commit()
+
+
+# 데이터 수정하기
+def update_post(db: Session, post: PostUpdateRequestSchema, post_id: int, user_id: int):
+
+    db_post = get_post_by_id(db, post_id)
+
+    # 내 Post인지 검증
+    if db_post.user_id != user_id:
+        raise ApiException(exception_code=ExceptionCode.POST_CANT_UPDATE)
+
+    # Post 수정
+    db_post.title = post.title
+    db_post.content = post.content
+    db_post.updated_at = datetime.now()
+    db.add(db_post)
+    db.commit()
+    return db_post

@@ -6,10 +6,9 @@ from pydantic import BaseModel, field_validator
 from app.config.exceptions import ApiException, ExceptionCode
 
 
-class PostRequestSchema(BaseModel):
+class PostUpdateRequestSchema(BaseModel):
     title: str
     content: str
-    board_id: int
 
     @field_validator('title', 'content')
     @classmethod
@@ -19,9 +18,10 @@ class PostRequestSchema(BaseModel):
         return v.title()
 
 
-class PostUpdateRequestSchema(BaseModel):
+class PostRequestSchema(PostUpdateRequestSchema):
     title: str
     content: str
+    board_id: int
 
 
 class PostResponseSchema(PostRequestSchema):

@@ -36,6 +36,7 @@ class ExceptionCode:
     # POST
     POST_NOT_FOUND = (StatusCode.HTTP_400, "P001", "해당 id의 게시글이 없습니다.")
     POST_BOARD_UNAUTHORIZATION = (StatusCode.HTTP_401, "P002", "내 게시판 또는 전체공개 게시판의 글만 작성할 수 있습니다.")
+    POST_CANT_UPDATE = (StatusCode.HTTP_401, "P003", "내 게시글만 수정하거나 삭제할 수 있습니다.")
 
     # VALIDATION
     VALIDATION_NOT_BLANK = (StatusCode.HTTP_422, "V422", "공백으로 이루어진 문자는 입력할 수 없습니다.")

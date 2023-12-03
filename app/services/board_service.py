@@ -38,7 +38,6 @@ def delete_board_by_id(db: Session, board_id: int):
 
 # 데이터 수정하기 - id로 게시판 수정하기
 def update_board(db: Session, board: BoardRequestSchema, board_id: int, user_id: int):
-    # Board 저장
     db_board = get_board_by_id(db, board_id)
 
     # 사용자 검증
