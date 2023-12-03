@@ -30,7 +30,7 @@ class ExceptionCode:
 
     # BOARD
     BOARD_NOT_FOUND = (StatusCode.HTTP_400, "B001", "해당 id의 게시판이 없습니다.")
-    BOARD_CANT_UPDATE = (StatusCode.HTTP_400, "B002", "내 게시판만 삭제할 수 있습니다.")
+    BOARD_CANT_UPDATE = (StatusCode.HTTP_400, "B002", "내 게시판만 수정하거나 삭제할 수 있습니다.")
 
     # POST
     POST_NOT_FOUND = (StatusCode.HTTP_400, "P001", "해당 id의 게시글이 없습니다.")

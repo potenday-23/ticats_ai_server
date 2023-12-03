@@ -21,5 +21,10 @@ def create_board(board: BoardRequestSchema, db: Session = Depends(get_db), user_
 
 @router.put("/{board_id}", response_model=BoardResponseSchema, summary="게시판 Update")
 def update_board(board: BoardRequestSchema, db: Session = Depends(get_db), board_id: int = None,
-                 user_id: int = Depends(UserIdProvider())):
+                 user_id: int = Depends(UserIdProvider())):  # todo : board_id 입력하지 않을 경우 예외 처리
     return board_service.update_board(db=db, board=board, board_id=board_id, user_id=user_id)
+
+
+@router.delete("/{board_id}", status_code=204, summary="게시판 Delete")
+def update_board(db: Session = Depends(get_db), board_id: int = None, user_id: int = Depends(UserIdProvider())):
+    board_service.delete_board(db=db, board_id=board_id, user_id=user_id)
