@@ -11,6 +11,7 @@ class StatusCode:
     HTTP_403 = 403
     HTTP_404 = 404
     HTTP_405 = 405
+    HTTP_422 = 422
 
 
 class ExceptionCode:
@@ -50,3 +51,14 @@ class ApiException(HTTPException):
                 "message": exception_code[2]
             }
         )
+
+
+# @app.exception_handler(RequestValidationError)
+# async def validation_exception_handler(exc: RequestValidationError):
+#     details = exc.errors()
+#     return JSONResponse(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+#                         content={"status_code": StatusCode.HTTP_422,
+#                                  "code": "C422",
+#                                  "message": details[0]["msg"]
+#                                  }
+#                         )

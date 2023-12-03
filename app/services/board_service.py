@@ -1,7 +1,5 @@
 # third-party
 from sqlalchemy.orm import Session
-from passlib.context import CryptContext
-from fastapi import HTTPException
 
 # Fast-app
 from app.models.board_model import Board
@@ -19,9 +17,9 @@ def get_boards(db: Session, skip: int = 0, limit: int = 100):
 
 
 # 데이터 생성하기
-def create_board(db: Session, board: BoardRequestSchema, access_token: str):
+def create_board(db: Session, board: BoardRequestSchema, user_id: int):
     # Board 저장
-    db_board = Board(name=board.name, public=board.public, user_id=board.user_id)
+    db_board = Board(name=board.name, public=board.public, user_id=user_id)
     db.add(db_board)
     db.commit()
     db.refresh(db_board)
