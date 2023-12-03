@@ -1,7 +1,7 @@
 # third-party
-from enum import Enum
-
-from fastapi import HTTPException
+from fastapi import HTTPException, status, Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 
 
 class StatusCode:
@@ -53,12 +53,11 @@ class ApiException(HTTPException):
         )
 
 
-# @app.exception_handler(RequestValidationError)
-# async def validation_exception_handler(exc: RequestValidationError):
-#     details = exc.errors()
-#     return JSONResponse(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-#                         content={"status_code": StatusCode.HTTP_422,
-#                                  "code": "C422",
-#                                  "message": details[0]["msg"]
-#                                  }
-#                         )
+async def validation_exception_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
+    details = exc.errors()
+    return JSONResponse(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                        content={"status_code": 422,
+                                 "code": "C422",
+                                 "message": details[0]["msg"]
+                                 }
+                        )
