@@ -5,6 +5,7 @@ from typing import List
 from pydantic import BaseModel, field_validator
 # Fast-app
 from app.config.exceptions import ApiException, ExceptionCode
+from app.schemas.common_schema import PageInfo
 from app.schemas.post_schema import PostResponseSchema
 
 
@@ -31,3 +32,8 @@ class BoardResponseSchema(BoardRequestSchema):
 
     class Config:
         orm_mode = True
+
+
+class BoardResponseListSchema(BaseModel):
+    board_list: List[BoardResponseSchema] = []
+    page_info: PageInfo

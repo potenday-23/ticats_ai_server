@@ -9,8 +9,10 @@ from app.config.exceptions import ApiException, ExceptionCode
 from app.models.board_model import Board
 from app.schemas.board_schema import BoardRequestSchema
 
-
 # 데이터 읽기 - ID로 게시판 불러오기
+from app.schemas.common_schema import PageInfo
+
+
 def get_board_by_id(db: Session, board_id: int):
     board = db.query(Board).filter(Board.id == board_id).first()
     if not board:
@@ -74,6 +76,30 @@ def get_board(db: Session, board_id: int, user_id: int):
     return db_board
 
 
-def get_board_list(db: Session, user_id: int):
+def get_board_list(db: Session, user_id: int, page: int, size: int):
     # 내 게시판, 전체 공개 게시판
-    return db.query(Board).filter(or_(Board.user_id == user_id, Board.public == True)).all()
+    board_list = db.query(Board).filter(or_(Board.user_id == user_id, Board.public == True))
+
+    # page_info 계산
+    total_elements = board_list.count()
+    total_pages = int(total_elements / size + (0 if total_elements % size == 0 else 1))
+
+    # page_info 설정
+    data = {
+        "page": page,
+        "size": size,
+        "total_elements": total_elements,
+        "total_pages": total_pages
+    }
+    page_info = PageInfo(**data)
+    print(page_info)
+
+    board_list = board_list.offset((page - 1) * size + 1).limit(page * size).all()
+
+    return {
+        "board_list": board_list,
+        "page_info": page_info
+    }
+
+# def get_posts(db: Session, skip: int = 0, limit: int = 100):
+#     return db.query(Post).offset(skip).limit(limit).all()
