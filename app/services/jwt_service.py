@@ -24,6 +24,18 @@ class AuthProvider:
         return authorization
 
 
+class UserProvider:
+    async def __call__(self, req: Request):
+        authorization: str = req.headers.get('authorization')
+        # authorization 토큰 없을 때
+        if not authorization:
+            raise ApiException(exception_code=ExceptionCode.AUTHORIZATION_EMPTY)
+        # "Baerer"형식이 아닐 때
+        if authorization[:8] is not "Baerer ":
+            raise ApiException(exception_code=ExceptionCode.TOKEN_NOT_VALID)
+        return get_user_id(authorization)
+
+
 def create_access_token(session_id: str, expires_delta: Optional[timedelta] = None) -> str:
     encode = {"sub": session_id}
     if expires_delta:
