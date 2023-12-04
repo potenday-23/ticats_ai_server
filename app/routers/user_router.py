@@ -28,7 +28,7 @@ def login_user(user: UserLoginRequestSchema, db: Session = Depends(get_db), resp
     response.headers["AccessToken"] = access_token
 
 
-@router.post("/logout", status_code=204, summary="AccessToken으로 로그아웃하기",
+@router.post("/logout", status_code=204, summary="계정 Logout(AccessToken을 통해서)",
              description="- API문서의 상단 초록색 버튼 Authorization버튼을 클릭하여 JWT 토큰을 입력해야합니다.")
 def logout_user(db: Session = Depends(get_db), authorization: str = Depends(AuthProvider())):
     logout_by_access_token(db=db, access_token=authorization)
