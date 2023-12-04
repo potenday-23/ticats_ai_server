@@ -96,5 +96,6 @@ def delete_user_by_id(db: Session, user_id: int):
 
 # 데이터 삭제 - email로 사용자 삭제하기
 def delete_user_by_email(db: Session, email: str):
-    db.query(User).filter(User.email == email).delete()
-    db.commit()
+    if db.query(User).filter(User.email == email).one():
+        db.query(User).filter(User.email == email).delete()
+        db.commit()

@@ -20,8 +20,8 @@ content = "Soccer is very good sports to increase your health"
 @pytest.fixture(scope="module")
 def user(db: Session):
     user_request_schema = UserSignupRequestSchema(email="testemail@test.com",
-                                            password="testpassword",
-                                            full_name="testfullname")
+                                                  password="testpassword",
+                                                  full_name="testfullname")
     user = create_user(db, user_request_schema)
     yield user
     delete_user_by_id(db, user.id)
@@ -37,24 +37,39 @@ def board(db: Session, user: User):
     delete_board_by_id(db, board.id)
 
 
-def test_create_post(client: TestClient, db: Session, user: User, board: Board) -> None:
+def test_게시글생성(client: TestClient, db: Session) -> None:
+    # Setting
+    sign_up_data = {
+        "email": "test@test.com",
+        "password": "Test",
+        "full_name": "김가영"
+    }
+    client.post("/api/users/signup", json=sign_up_data)
+    login_data = {
+        "email": "test@test.com",
+        "password": "Test",
+    }
+    r = client.post("/api/users/login", json=login_data)
+    access_token = "Bearer " + r.headers["accesstoken"]
+    board_data = {
+        "name": "Movie",
+        "public": True,
+    }
+    board_json = client.post("/api/boards", json=board_data, headers={"Authorization": access_token}).json()
+
     # given
     post_data = {
-        "title": title,
-        "content": content,
-        "user_id": user.id,
-        "board_id": board.id
+        "title": "게시글1",
+        "content": "내용1",
+        "board_id": int(board_json["id"])
     }
 
     # when
-    r = client.post(POST_ROUTER_PATH, json=post_data)
+    r = client.post(POST_ROUTER_PATH, json=post_data, headers={"Authorization": access_token})
     create_post = r.json()
-    delete_post_by_id(db, create_post["id"])
 
     # then
     assert r.status_code == 200
-    assert create_post["title"] == title
-    assert create_post["content"] == content
-    assert create_post["user_id"] == user.id
-    assert create_post["board_id"] == board.id
-
+    assert create_post["title"] == "게시글1"
+    assert create_post["content"] == "내용1"
+    assert create_post["board_id"] == int(board_json["id"])
