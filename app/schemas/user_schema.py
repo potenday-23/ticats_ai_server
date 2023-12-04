@@ -21,6 +21,11 @@ class UserSignupRequestSchema(BaseModel):
             raise ApiException(exception_code=ExceptionCode.VALIDATION_NOT_BLANK)
         return v.title()
 
+    @field_validator('email')
+    @classmethod
+    def email_to_lower_case(cls, v: str) -> str:
+        return v.lower()
+
 
 class UserLoginRequestSchema(BaseModel):
     email: EmailStr
@@ -32,6 +37,11 @@ class UserLoginRequestSchema(BaseModel):
         if v.replace(" ", "") == "":
             raise ApiException(exception_code=ExceptionCode.VALIDATION_NOT_BLANK)
         return v.title()
+
+    @field_validator('email')
+    @classmethod
+    def email_to_lower_case(cls, v: str) -> str:
+        return v.lower()
 
 
 class UserResponseSchema(BaseModel):
