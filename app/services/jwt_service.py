@@ -6,10 +6,10 @@ from jose import jwt, JWTError, ExpiredSignatureError
 from fastapi import HTTPException, Request
 from fastapi.security import HTTPBearer
 # fast-api
+from app.config.config import SECRET_KEY
 from app.config.exceptions import ApiException, ExceptionCode
 from app.services.redis_service import get_session_from_redis_key
 
-SECRET_KEY = "e068f0399d3729db42eafdc56ca258ff3954c38a24ac423a6d5b15005378785c"  # todo : 새로 생성하고, 환경변수로 분리할 것
 ALGORITHM = "HS256"
 
 
