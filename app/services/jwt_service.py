@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 # third-party
 from jose import jwt, JWTError, ExpiredSignatureError
 from fastapi import HTTPException, Request
+from fastapi.security import HTTPBearer
 # fast-api
 from app.config.exceptions import ApiException, ExceptionCode
 from app.services.redis_service import get_session_from_redis_key
@@ -12,28 +13,21 @@ SECRET_KEY = "e068f0399d3729db42eafdc56ca258ff3954c38a24ac423a6d5b15005378785c" 
 ALGORITHM = "HS256"
 
 
-class AuthProvider:
+class AuthProvider(HTTPBearer):
     async def __call__(self, req: Request):
         authorization: str = req.headers.get('authorization')
         # authorization 토큰 없을 때
         if not authorization:
             raise ApiException(exception_code=ExceptionCode.AUTHORIZATION_EMPTY)
-        # "Baerer"형식이 아닐 때
-        if authorization[:7] is not "Baerer ":
+        # "Bearer"형식이 아닐 때
+        if authorization[:7] != "Bearer ":
             raise ApiException(exception_code=ExceptionCode.TOKEN_NOT_VALID)
-        return authorization
+        return authorization.replace("Bearer ", "").replace(" ", "")
 
 
-class UserIdProvider:
+class UserIdProvider(AuthProvider):
     async def __call__(self, req: Request):
-        authorization: str = req.headers.get('authorization')
-        # authorization 토큰 없을 때
-        if not authorization:
-            raise ApiException(exception_code=ExceptionCode.AUTHORIZATION_EMPTY)
-        # "Baerer"형식이 아닐 때
-        if authorization[:7] != "Baerer ":
-            print(authorization[:7])
-            raise ApiException(exception_code=ExceptionCode.TOKEN_NOT_VALID)
+        authorization = await super().__call__(req=req)
         return get_user_id(authorization)
 
 
@@ -44,13 +38,12 @@ def create_access_token(session_id: str, expires_delta: Optional[timedelta] = No
     else:
         expire = datetime.now() + timedelta(minutes=15)
     encode.update({"exp": expire})
-    return "Baerer " + jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
+    return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
 def get_sub_from_access_token(access_token: str) -> str:
     try:
         # redis_key 추출
-        access_token = access_token.replace("Baerer ", "").replace(" ", "")
         payload = jwt.decode(access_token, SECRET_KEY, algorithms=[ALGORITHM])
         redis_key = payload.get("sub")
         if redis_key is None:

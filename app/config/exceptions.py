@@ -24,7 +24,7 @@ class ExceptionCode:
     AUTHORIZATION_EMPTY = (StatusCode.HTTP_401, "A003", "인증 정보(Authorization)이 누락되었습니다.")
 
     # USER
-    USER_NOT_FOUND = (StatusCode.HTTP_400, "U001", "해당 id의 사용자가 없습니다.")
+    USER_NOT_FOUND = (StatusCode.HTTP_400, "U001", "해당 사용자가 없습니다.")
     USER_EMAIL_DUPLICATE = (StatusCode.HTTP_400, "U002", "해당 이메일은 이미 사용중입니다.")
     USER_NOT_VALID = (StatusCode.HTTP_400, "U003", "이메일이 존재하지 않거나, 비밀번호를 틀렸습니다.")
 
