@@ -93,7 +93,7 @@ def get_board_list(db: Session, user_id: int, page: int, size: int):
     page_info = PageInfo(**data)
     print(page_info)
 
-    board_list = board_list.offset((page - 1) * size + 1).limit(page * size).all()
+    board_list = board_list.offset((page - 1) * size).limit(page * size).all()
 
     return {
         "board_list": board_list,

@@ -107,7 +107,7 @@ def get_post_by_board_id(db: Session, board_id: int, user_id: int, page: int, si
     page_info = PageInfo(**data)
     print(page_info)
 
-    post_list = posts.offset((page - 1) * size + 1).limit(page * size).all()
+    post_list = posts.offset((page - 1) * size).limit(page * size).all()
 
     return {
         "post_list": post_list,
