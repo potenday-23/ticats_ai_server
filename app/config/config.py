@@ -20,7 +20,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
-redis_client = redis.Redis(host="localhost", port=6379)
+redis_client = redis.Redis(host=config('REDIS_HOST'), port=6379)
 
 
 def get_db():
