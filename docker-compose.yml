@@ -5,9 +5,9 @@ services:
   postgres:
     image: postgres:13
     environment:
-      - POSTGRES_DB=develop
-      - POSTGRES_USER=develop
-      - POSTGRES_PASSWORD=develop
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin1234
     volumes:
       - postgres-data:/var/lib/postgresql/data
     ports:

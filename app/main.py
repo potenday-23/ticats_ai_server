@@ -11,7 +11,7 @@ app = FastAPI(
     title="김가영 미니 프로젝트",
     summary="엘리스 신입(python) 채용 과제로 수행한, 게시판, 게시글을 작성할 수 있는 FastAPI 기반 프로젝트",
     description="✔ 수행 기간 : 2023.12.01(9:00) ~ 2023.12.05(9:00)<br>"
-                "✔ Tech : FastAPI, SQLAlchemy, pydantic, postgresql, JWT, Alembic",
+                "✔ Tech : FastAPI, SQLAlchemy, pydantic, postgresql, JWT, Alembic, Docker, AWS",
     version="0.0.1",
     contact={
         "name": "김가영",
