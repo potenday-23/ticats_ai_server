@@ -91,7 +91,7 @@ def get_board_list(db: Session, user_id: int, page: int, size: int):
         board_list.append(board_schema)
 
     # page_info 설정
-    page_info = get_page_info(len(board_list), page, size)
+    page_info = get_page_info(query.count(), page, size)
 
     return {
         "board_list": board_list,
