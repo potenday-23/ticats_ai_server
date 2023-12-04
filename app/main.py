@@ -10,7 +10,7 @@ from fastapi.exceptions import RequestValidationError
 app = FastAPI()
 
 # DB 생성
-Base.metadata.create_all(bind=engine)
+# Base.metadata.create_all(bind=engine)
 
 # Router
 app.include_router(user_router.router)
