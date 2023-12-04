@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 import redis
 
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:admin1234@127.0.0.1:5432/postgres"
+SQLALCHEMY_DATABASE_URL = "postgresql://postgres:admin1234@postgres:5432/postgres"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
