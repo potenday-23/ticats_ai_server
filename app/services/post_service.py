@@ -5,7 +5,9 @@ from sqlalchemy.orm import Session
 
 # Fast-app
 from app.config.exceptions import ApiException, ExceptionCode
+from app.models import Board
 from app.models.post_model import Post
+from app.schemas.common_schema import PageInfo
 from app.schemas.post_schema import PostRequestSchema, PostUpdateRequestSchema
 
 from app.services.board_service import get_board_by_id
@@ -83,10 +85,31 @@ def delete_post_by_id(db: Session, post_id: int):
 
 
 # 게시판 데이터 조회
-def get_post_by_board_id(db: Session, board_id: int, user_id: int):
+def get_post_by_board_id(db: Session, board_id: int, user_id: int, page: int, size: int):
     # 내 게시판, 전체공개 게시판 검증
     db_board = get_board_by_id(db, board_id)
     if db_board.user_id != user_id and db_board.public == False:
         raise ApiException(exception_code=ExceptionCode.BOARD_CANT_GET)
-    posts = db_board.posts
-    return posts
+    posts = db.query(Post).filter(Post.board_id == board_id) # todo : 쿼리가 두 번 돌아가는데 이를 줄일 수 있는 방법은 없을까?
+
+    # todo : board와 post의 Pagination 기능이 공통적이기 때문에 메서드로 코드 중복 최소화가 필요함.
+    # page_info 계산
+    total_elements = posts.count()
+    total_pages = int(total_elements / size + (0 if total_elements % size == 0 else 1))
+
+    # page_info 설정
+    data = {
+        "page": page,
+        "size": size,
+        "total_elements": total_elements,
+        "total_pages": total_pages
+    }
+    page_info = PageInfo(**data)
+    print(page_info)
+
+    post_list = posts.offset((page - 1) * size + 1).limit(page * size).all()
+
+    return {
+        "post_list": post_list,
+        "page_info": page_info
+    }

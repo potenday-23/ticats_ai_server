@@ -1,9 +1,11 @@
 # third-party
 from datetime import datetime
+from typing import List
 
 from pydantic import BaseModel, field_validator
 
 from app.config.exceptions import ApiException, ExceptionCode
+from app.schemas.common_schema import PageInfo
 
 
 class PostUpdateRequestSchema(BaseModel):
@@ -35,3 +37,8 @@ class PostResponseSchema(PostRequestSchema):
 
     class Config:
         orm_mode = True
+
+
+class PostResponseListSchema(BaseModel):
+    post_list: List[PostResponseSchema] = []
+    page_info: PageInfo
