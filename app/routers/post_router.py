@@ -1,4 +1,6 @@
 # third-party
+from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 # Fast-app
@@ -33,3 +35,8 @@ def delete_post(db: Session = Depends(get_db), post_id: int = None, user_id: int
 @router.get("/{post_id}", response_model=PostResponseSchema, summary="게시글 Get(1건)")
 def get_post(db: Session = Depends(get_db), post_id: int = None, user_id: int = Depends(UserIdProvider())):
     return post_service.get_post(db=db, post_id=post_id, user_id=user_id)
+
+
+@router.get("/boards/{board_id}", response_model=List[PostResponseSchema], summary="게시글 List(해당 게시판의 게시글 전체)")
+def get_post(db: Session = Depends(get_db), board_id: int = None, user_id: int = Depends(UserIdProvider())):
+    return post_service.get_post_by_board_id(db=db, board_id=board_id, user_id=user_id)

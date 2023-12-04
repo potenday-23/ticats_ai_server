@@ -80,3 +80,13 @@ def get_post(db: Session, post_id: int, user_id: int):
 def delete_post_by_id(db: Session, post_id: int):
     db.query(Post).filter(Post.id == post_id).delete()
     db.commit()
+
+
+# 게시판 데이터 조회
+def get_post_by_board_id(db: Session, board_id: int, user_id: int):
+    # 내 게시판, 전체공개 게시판 검증
+    db_board = get_board_by_id(db, board_id)
+    if db_board.user_id != user_id and db_board.public == False:
+        raise ApiException(exception_code=ExceptionCode.BOARD_CANT_GET)
+    posts = db_board.posts
+    return posts
