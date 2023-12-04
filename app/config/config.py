@@ -1,10 +1,18 @@
+# built-in
+import os
 # third-party
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 import redis
+from starlette.config import Config
+from dotenv import load_dotenv
 
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:admin1234@postgres:5432/postgres"
+load_dotenv()
+
+config = Config('.env')
+SQLALCHEMY_DATABASE_URL = config('SQLALCHEMY_DATABASE_URL')
+SECRET_KEY = config('SECRET_KEY')
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
