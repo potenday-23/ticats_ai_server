@@ -34,9 +34,9 @@ class UserIdProvider(AuthProvider):
 def create_access_token(session_id: str, expires_delta: Optional[timedelta] = None) -> str:
     encode = {"sub": session_id}
     if expires_delta:
-        expire = datetime.now() + expires_delta
+        expire = datetime.utcnow() + expires_delta
     else:
-        expire = datetime.now() + timedelta(minutes=15)
+        expire = datetime.utcnow() + timedelta(seconds=25)
     encode.update({"exp": expire})
     return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
 
