@@ -15,7 +15,7 @@ ALGORITHM = "HS256"
 
 class AuthProvider(HTTPBearer):
     async def __call__(self, req: Request):
-        authorization: str = req.headers.get('authorization')
+        authorization: str = req.headers.get('Authorization')
         # authorization 토큰 없을 때
         if not authorization:
             raise ApiException(exception_code=ExceptionCode.AUTHORIZATION_EMPTY)

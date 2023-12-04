@@ -20,7 +20,7 @@ class Post(Base):
 
     # created_at & updated_at
     created_at = Column(DateTime, default=datetime.now())
-    updated_at = Column(DateTime, default=datetime.now())  # todo : Patch또는 Put사에 변경되는 로직 추가
+    updated_at = Column(DateTime, default=datetime.now())
 
     # FK
     user = relationship("User", back_populates="posts")

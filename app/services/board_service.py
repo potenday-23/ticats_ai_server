@@ -2,14 +2,16 @@
 from datetime import datetime
 # third-party
 from sqlalchemy.orm import Session
-from sqlalchemy import or_
+from sqlalchemy import or_, func
 
 # Fast-api
 from app.config.exceptions import ApiException, ExceptionCode
+from app.models import Post
 from app.models.board_model import Board
-from app.schemas.board_schema import BoardRequestSchema
+from app.schemas.board_schema import BoardRequestSchema, BoardResponseSchema, BoardPostCountResponseSchema
 from app.schemas.common_schema import PageInfo
 from app.services.common_service import get_page_info
+
 
 # 데이터 읽기 - ID로 게시판 불러오기
 def get_board_by_id(db: Session, board_id: int):
@@ -75,12 +77,21 @@ def get_board(db: Session, board_id: int, user_id: int):
 
 
 def get_board_list(db: Session, user_id: int, page: int, size: int):
-    # 내 게시판, 전체 공개 게시판
-    board_list = db.query(Board).filter(or_(Board.user_id == user_id, Board.public == True))
+
+    # 게시판별 게시글 갯수 조회
+    board_cnt_list = db.query(Post.board_id, func.count(Post.id)).group_by(Post.board_id).order_by(
+        func.count(Post.id).desc()).all()
+
+    # 게시판 목록
+    board_list = list()
+    query = db.query(Board).filter(or_(Board.user_id == user_id, Board.public == True))
+    for board_id, post_cnt in board_cnt_list[(page - 1) * size:page * size]:
+        board_schema = BoardPostCountResponseSchema.model_validate(query.filter(Board.id == board_id).one())
+        board_schema.post_cnt = post_cnt
+        board_list.append(board_schema)
 
     # page_info 설정
-    page_info = get_page_info(board_list.count(), page, size)
-    board_list = board_list.offset((page - 1) * size).limit(page * size).all()
+    page_info = get_page_info(len(board_list), page, size)
 
     return {
         "board_list": board_list,
