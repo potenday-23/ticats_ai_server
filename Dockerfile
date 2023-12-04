@@ -2,10 +2,10 @@ FROM python:3.10
 
 WORKDIR /code
 
-COPY ./requirements.txt /code/requirements.txt
+COPY ./ /code/
 
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
-RUN alembic revision --autogenerate
+CMD ["alembic", "revision", "--autogenerate"]
 
-RUN alembic upgrade head
+CMD ["alembic", "upgrade", "head"]
