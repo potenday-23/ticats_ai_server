@@ -38,7 +38,6 @@ def delete_board_by_id(db: Session, board_id: int):
 
 # 데이터 수정하기 - id로 게시판 수정하기
 def update_board(db: Session, board: BoardRequestSchema, board_id: int, user_id: int):
-    # Board 저장
     db_board = get_board_by_id(db, board_id)
 
     # 사용자 검증
@@ -100,6 +99,3 @@ def get_board_list(db: Session, user_id: int, page: int, size: int):
         "board_list": board_list,
         "page_info": page_info
     }
-
-# def get_posts(db: Session, skip: int = 0, limit: int = 100):
-#     return db.query(Post).offset(skip).limit(limit).all()
