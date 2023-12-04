@@ -23,6 +23,3 @@ archive.zip
 # vim temporary files
 *~
 .*.sw?
-
-# migrations
-migrations/versions/**
