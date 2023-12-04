@@ -1,3 +1,4 @@
+import os
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
@@ -7,7 +8,7 @@ from alembic import context
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
-from app.config.config import Base
+from app.config.config import Base, SQLALCHEMY_DATABASE_URL
 
 config = context.config
 
@@ -20,7 +21,11 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-config.set_main_option('sqlachemy.url', "postgresql://postgres:admin1234@127.0.0.1:5432/postgres")
+if not config.get_main_option("sqlalchemy.url"):
+    config.set_main_option(
+        "sqlalchemy.url",
+        SQLALCHEMY_DATABASE_URL
+    )
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
