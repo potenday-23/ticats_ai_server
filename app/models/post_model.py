@@ -15,8 +15,8 @@ class Post(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True)
     content = Column(String, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    board_id = Column(Integer, ForeignKey("boards.id"))
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
+    board_id = Column(Integer, ForeignKey("boards.id", ondelete="CASCADE"))
 
     # created_at & updated_at
     created_at = Column(DateTime, default=datetime.now())

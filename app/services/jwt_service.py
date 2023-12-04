@@ -36,7 +36,7 @@ def create_access_token(session_id: str, expires_delta: Optional[timedelta] = No
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(seconds=25)
+        expire = datetime.utcnow() + timedelta(weeks=2)
     encode.update({"exp": expire})
     return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
 
