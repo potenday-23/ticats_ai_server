@@ -11,6 +11,7 @@ from app.schemas.common_schema import PageInfo
 from app.schemas.post_schema import PostRequestSchema, PostUpdateRequestSchema
 
 from app.services.board_service import get_board_by_id
+from app.services.common_service import get_page_info
 
 
 def get_post_by_id(db: Session, post_id: int):
@@ -90,23 +91,10 @@ def get_post_by_board_id(db: Session, board_id: int, user_id: int, page: int, si
     db_board = get_board_by_id(db, board_id)
     if db_board.user_id != user_id and db_board.public == False:
         raise ApiException(exception_code=ExceptionCode.BOARD_CANT_GET)
-    posts = db.query(Post).filter(Post.board_id == board_id) # todo : 쿼리가 두 번 돌아가는데 이를 줄일 수 있는 방법은 없을까?
+    posts = db.query(Post).filter(Post.board_id == board_id)  # todo : 쿼리가 두 번 돌아가는데 이를 줄일 수 있는 방법은 없을까?
 
-    # todo : board와 post의 Pagination 기능이 공통적이기 때문에 메서드로 코드 중복 최소화가 필요함.
     # page_info 계산
-    total_elements = posts.count()
-    total_pages = int(total_elements / size + (0 if total_elements % size == 0 else 1))
-
-    # page_info 설정
-    data = {
-        "page": page,
-        "size": size,
-        "total_elements": total_elements,
-        "total_pages": total_pages
-    }
-    page_info = PageInfo(**data)
-    print(page_info)
-
+    page_info = get_page_info(posts.count(), page, size)
     post_list = posts.offset((page - 1) * size).limit(page * size).all()
 
     return {

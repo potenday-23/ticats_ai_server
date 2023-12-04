@@ -4,15 +4,14 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
 
-# Fast-app
+# Fast-api
 from app.config.exceptions import ApiException, ExceptionCode
 from app.models.board_model import Board
 from app.schemas.board_schema import BoardRequestSchema
+from app.schemas.common_schema import PageInfo
+from app.services.common_service import get_page_info
 
 # 데이터 읽기 - ID로 게시판 불러오기
-from app.schemas.common_schema import PageInfo
-
-
 def get_board_by_id(db: Session, board_id: int):
     board = db.query(Board).filter(Board.id == board_id).first()
     if not board:
@@ -79,20 +78,8 @@ def get_board_list(db: Session, user_id: int, page: int, size: int):
     # 내 게시판, 전체 공개 게시판
     board_list = db.query(Board).filter(or_(Board.user_id == user_id, Board.public == True))
 
-    # page_info 계산
-    total_elements = board_list.count()
-    total_pages = int(total_elements / size + (0 if total_elements % size == 0 else 1))
-
     # page_info 설정
-    data = {
-        "page": page,
-        "size": size,
-        "total_elements": total_elements,
-        "total_pages": total_pages
-    }
-    page_info = PageInfo(**data)
-    print(page_info)
-
+    page_info = get_page_info(board_list.count(), page, size)
     board_list = board_list.offset((page - 1) * size).limit(page * size).all()
 
     return {
