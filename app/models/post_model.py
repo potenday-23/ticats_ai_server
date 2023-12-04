@@ -15,12 +15,12 @@ class Post(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True)
     content = Column(String, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    board_id = Column(Integer, ForeignKey("boards.id"))
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
+    board_id = Column(Integer, ForeignKey("boards.id", ondelete="CASCADE"))
 
     # created_at & updated_at
     created_at = Column(DateTime, default=datetime.now())
-    updated_at = Column(DateTime, default=datetime.now())  # todo : Patch또는 Put사에 변경되는 로직 추가
+    updated_at = Column(DateTime, default=datetime.now())
 
     # FK
     user = relationship("User", back_populates="posts")

@@ -28,12 +28,17 @@ class BoardResponseSchema(BoardRequestSchema):
     user_id: int
     created_at: datetime
     updated_at: datetime
-    posts: List[PostResponseSchema] = []
+
+    # posts: List[PostResponseSchema] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+
+class BoardPostCountResponseSchema(BoardResponseSchema):
+    post_cnt: int = 0
 
 
 class BoardResponseListSchema(BaseModel):
-    board_list: List[BoardResponseSchema] = []
+    board_list: List[BoardPostCountResponseSchema] = []
     page_info: PageInfo

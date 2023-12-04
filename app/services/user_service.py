@@ -57,6 +57,8 @@ def create_user(db: Session, user: UserSignupRequestSchema):
 def login_user(db: Session, user: UserLoginRequestSchema):
     # email로 찾기
     find_user = get_user_by_email(db, user.email)
+    if not user:
+        raise ApiException(exception_code=ExceptionCode.USER_NOT_FOUND)
 
     # email, password 유효성 검사
     is_email_valid = find_user is None
@@ -96,15 +98,3 @@ def delete_user_by_id(db: Session, user_id: int):
 def delete_user_by_email(db: Session, email: str):
     db.query(User).filter(User.email == email).delete()
     db.commit()
-
-# # 데이터 읽기 - 여러 항목 읽어오기
-# def get_items(db: Session, skip: int = 0, limit: int = 100):
-#     return db.query(models.Item).offset(skip).limit(limit).all()
-#
-#
-# def create_user_item(db: Session, item: schemas.ItemCreate, user_id: int):
-#     db_item = models.Item(**item.dict(), owner_id=user_id)
-#     db.add(db_item)
-#     db.commit()
-#     db.refresh(db_item)
-#     return db_item
