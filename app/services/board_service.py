@@ -78,22 +78,29 @@ def get_board(db: Session, board_id: int, user_id: int):
 
 def get_board_list(db: Session, user_id: int, page: int, size: int):
 
-    # 게시판별 게시글 갯수 조회
-    board_cnt_list = db.query(Post.board_id, func.count(Post.id)).group_by(Post.board_id).order_by(
-        func.count(Post.id).desc()).all()
+    # Board별 Post_count계산
+    q1 = db.query(Post.board_id, func.count(Post.id).label("post_count")).group_by(Post.board_id).subquery()
 
-    # 게시판 목록
-    board_list = list()
-    query = db.query(Board).filter(or_(Board.user_id == user_id, Board.public == True))
-    for board_id, post_cnt in board_cnt_list[(page - 1) * size:page * size]:
-        board_schema = BoardPostCountResponseSchema.model_validate(query.filter(Board.id == board_id).one())
+    # join을 이용하여 post_count와 Board 함께 반환
+    q2 = db.query(Board, func.coalesce(q1.c.post_count, 0))\
+        .outerjoin(q1, Board.id == q1.c.board_id)\
+        .filter(or_(Board.user_id == user_id, Board.public == True))\
+        .order_by(func.coalesce(q1.c.post_count, 0).desc())
+
+    # Pagination
+    q3 = q2.offset((page - 1) * size).limit(page * size).all()
+
+    board_list = []
+    for board, post_cnt in q3:
+        board_schema = BoardPostCountResponseSchema.model_validate(board)
         board_schema.post_cnt = post_cnt
         board_list.append(board_schema)
 
     # page_info 설정
-    page_info = get_page_info(query.count(), page, size)
+    page_info = get_page_info(q2.count(), page, size)
 
     return {
         "board_list": board_list,
         "page_info": page_info
     }
+
