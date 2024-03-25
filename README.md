@@ -35,7 +35,7 @@
 ## 디렉터리 구조
 
 - 3-Tier Architecture 방식 적용
-- 관련 TIL : [[elice #3] 디렉터리 구조화](https://www.notion.so/gabang2/elice-3-c9a18a905bd84e0dabcfbd4b7806db3e)
+- 관련 TIL : [[ocr #3] 디렉터리 구조화](https://www.notion.so/gabang2/elice-3-c9a18a905bd84e0dabcfbd4b7806db3e)
 
 ```angular2html
 ├─app
@@ -86,12 +86,12 @@ Test
 
 ### 각 TIL 링크
 
-- [[elice #1] Fast API PostgreSQL 환경 구축 & CRUD](https://www.notion.so/gabang2/elice-1-Fast-API-PostgreSQL-CRUD-3dce6a6a243f4c539ef06a842d1a824b)
-- [[elice #3] ERD 설계 & CRUD](https://www.notion.so/gabang2/elice-3-ERD-CRUD-fc7a6a0e768f4692848ac1697ee684c4)
-- [[elice #3] 디렉터리 구조화](https://www.notion.so/gabang2/elice-3-c9a18a905bd84e0dabcfbd4b7806db3e)
-- [[elice #3] Test Code 작성하기](https://www.notion.so/gabang2/elice-3-Test-Code-09f1666bcd6d4f23a3912a7c0b1a09fb)
-- [[elice #7] 비밀번호 암호화 관련 라이브러리 오류](https://www.notion.so/gabang2/elice-7-473cf400134f41fdb341080eebfce01e)
-- [[elice #7] JWT 검증 로직 추가](https://www.notion.so/gabang2/elice-7-JWT-bf8bfff659064c6fbbcf7826b76ec057)
-- [[elice #8] pagination 기능](https://www.notion.so/gabang2/elice-8-pagination-d31e74bd3f1248de98f0ddea41f10c7c)
-- [[elice #10] 데이터베이스 Alembic 도입 과정](https://www.notion.so/gabang2/elice-10-Alembic-734a2bcd2f1240bea7aed89c48da7299)
-- [[elice #11] docker-compose 적용하기 ](https://www.notion.so/gabang2/elice-11-docker-compose-ddbf076bc0364104bb385fc978f62c9a)
+- [[ocr #1] Fast API PostgreSQL 환경 구축 & CRUD](https://www.notion.so/gabang2/elice-1-Fast-API-PostgreSQL-CRUD-3dce6a6a243f4c539ef06a842d1a824b)
+- [[ocr #3] ERD 설계 & CRUD](https://www.notion.so/gabang2/elice-3-ERD-CRUD-fc7a6a0e768f4692848ac1697ee684c4)
+- [[ocr #3] 디렉터리 구조화](https://www.notion.so/gabang2/elice-3-c9a18a905bd84e0dabcfbd4b7806db3e)
+- [[ocr #3] Test Code 작성하기](https://www.notion.so/gabang2/elice-3-Test-Code-09f1666bcd6d4f23a3912a7c0b1a09fb)
+- [[ocr #7] 비밀번호 암호화 관련 라이브러리 오류](https://www.notion.so/gabang2/elice-7-473cf400134f41fdb341080eebfce01e)
+- [[ocr #7] JWT 검증 로직 추가](https://www.notion.so/gabang2/elice-7-JWT-bf8bfff659064c6fbbcf7826b76ec057)
+- [[ocr #8] pagination 기능](https://www.notion.so/gabang2/elice-8-pagination-d31e74bd3f1248de98f0ddea41f10c7c)
+- [[ocr #10] 데이터베이스 Alembic 도입 과정](https://www.notion.so/gabang2/elice-10-Alembic-734a2bcd2f1240bea7aed89c48da7299)
+- [[ocr #11] docker-compose 적용하기 ](https://www.notion.so/gabang2/elice-11-docker-compose-ddbf076bc0364104bb385fc978f62c9a)
