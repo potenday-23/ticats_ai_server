@@ -13,7 +13,7 @@ from app.services.user_service import create_user, delete_user_by_id
 POST_ROUTER_PATH = "/api/posts"
 
 # 게시글 정보
-title = "About Soccer's Strategy"
+title = "About Soccer"s Strategy"
 content = "Soccer is very good sports to increase your health"
 
 
