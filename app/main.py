@@ -5,7 +5,7 @@ from app.config.exceptions import validation_exception_handler
 from fastapi import FastAPI
 
 # Routers
-from app.routers import ocr_router
+from app.routers import ocr_router, recommend_router
 
 # Exception
 from fastapi.exceptions import RequestValidationError
@@ -32,6 +32,7 @@ app = FastAPI(
 
 # Router
 app.include_router(ocr_router.router)
+app.include_router(recommend_router.router)
 
 # exception Handler
 app.add_exception_handler(RequestValidationError, validation_exception_handler)
