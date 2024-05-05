@@ -14,7 +14,7 @@ def get_cultural_event_evaluation_list():
     """
     base_url = "https://ticats.site/api/cultural-event-evaluations"
     try:
-        response = requests.get(base_url + "")
+        response = requests.get(base_url + "?page=1&size=100")
         response.raise_for_status()
         data = response.json()
         df = pd.DataFrame(data)
