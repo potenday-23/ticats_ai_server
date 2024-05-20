@@ -6,6 +6,5 @@ from app.schemas.ocr_schema import OcrRequestSchema
 def get_ocr_values(ocr_photo: OcrRequestSchema):
     file = ocr_photo.file
 
-
     values = {"title": "title example"}
     return values
