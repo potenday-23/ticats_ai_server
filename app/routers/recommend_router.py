@@ -2,7 +2,7 @@
 from fastapi import APIRouter
 
 # Services
-from app.services.recommend_service import get_cultural_event_list
+from app.services.utils import get_cultural_event_evaluation_list
 
 # Router
 router = APIRouter(
@@ -14,7 +14,7 @@ router = APIRouter(
 # Main Section
 @router.post("", summary="OCR 분석", description="")
 async def upload_ocr_photo():
-    df = get_cultural_event_list()
+    df = get_cultural_event_evaluation_list()
     print(df)
 
     return None
