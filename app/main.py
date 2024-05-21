@@ -4,17 +4,14 @@ from app.config.exceptions import validation_exception_handler
 # Fast API
 from fastapi import FastAPI
 
-# Routers
-from app.routers import ocr_router, recommend_router
-
 # Exception
 from fastapi.exceptions import RequestValidationError
 
-
 # Main Section
 app = FastAPI(
-    title="티켓 사진 OCR 서버",
-    summary="티켓 사진의 텍스트로 추출하는 FastAPI 기반 프로젝트",
+    title="AI 서버",
+    summary=" - 키워드 추출 및 감성 추출\n"
+            " - 문화생활 추천\n",
     description="✔ Tech : FastAPI, SQLAlchemy, pydantic, postgresql, JWT, Alembic, Docker, AWS",
     version="0.0.1",
     contact={
@@ -30,9 +27,16 @@ app = FastAPI(
     ]
 )
 
-# Router
-app.include_router(ocr_router.router)
-app.include_router(recommend_router.router)
+
+# Router inclusion moved inside the function to avoid circular imports
+def include_routers(app):
+    from app.routers import keyword_router, ocr_router, recommend_router
+    app.include_router(keyword_router.router)
+    app.include_router(ocr_router.router)
+    app.include_router(recommend_router.router)
+
+
+include_routers(app)
 
 # exception Handler
 app.add_exception_handler(RequestValidationError, validation_exception_handler)
