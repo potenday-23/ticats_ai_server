@@ -4,6 +4,15 @@
 ✔ 배포 웹사이트 : 배포 이전 상태 <br>
 ✔ Tech : FastAPI, SQLAlchemy, pydantic, postgresql, JWT, Alembic, Docker, AWS<br>
 
+## Convention
+- Camel Case(클래스)와 Snake Case(함수명) 구분
+- 중복된 파라미터 최소화
+- 함수에 대한 정의는 """로 시작
+- 타입 힌트
+- 주석은 최소화 + 코드 위에 간결하게 작성
+- 비슷한 함수는 클래스로 묶기
+- 미래에 쓸 것 같은 코드는 과감히 제외 (정말 쓸거라면 # TODO 주석으로)
+
 ## Summary
 
 - 사진의 텍스트를 추출하는 AI 서버
@@ -22,15 +31,16 @@
    ```env
    SECRET_KEY=e068f0399d3729db42eafdc56ca258ff3954c38a24ac423a6d5b15005378785c
    ```
-2. 라이브러리 설치(python 3.10버전)
+2. 라이브러리 설치(python 3.9버전)
    ```bash
-      pip install requirements2.txt
+      pip install requirements.txt
    ```
 3. 엘리스 미니 프로젝트 실행
     ```bash
    alembic upgrade head
    uvicorn main:app --reload
     ```
+   - http://127.0.0.1:8000/docs
 
 ## 디렉터리 구조
 

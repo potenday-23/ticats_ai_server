@@ -42,8 +42,19 @@ from ai.bert_dataset import BERTDataset
 
 # Main Section
 class KeywordService:
-    stopwords = STOP_WORDS
-    model_path = "/Users/rosie/PycharmProjects/ticats_ai_server/ai/KoBERT_D2_E11_A92.pt"
+    def __init__(self):
+        # Load the tokenizer once during initialization
+        self.tokenizer = BertTokenizer.from_pretrained('bert-base-multilingual-cased')
+        self.stopwords = STOP_WORDS
+        self.model_path = "/Users/rosie/PycharmProjects/ticats_ai_server/ai/KoBERT_D2_E11_A92.pt"
+
+        # KoBERT용 토크나이저 정의
+        self.bert_model, self.vocab = get_pytorch_kobert_model(cachedir=".cache")
+        self.tok = nlp.data.BERTSPTokenizer(get_tokenizer(), self.vocab, lower=False)
+
+        # 감정 분석 모델 로드
+        self.model = BERTClassifier(self.bert_model, dr_rate=0.5)
+        self.model.load_state_dict(torch.load(self.model_path, map_location=torch.device('cpu')), strict=False)
 
     def fetch_evaluations(self, url: str) -> str:
         """
@@ -92,21 +103,16 @@ class KeywordService:
             print(f'Exception: {e}')
             return ' '
 
-    def united_Processor(self, target: str) -> (str, str):  # 토픽모델링 + 감성 분류
+    def united_Processor(self, target: str) -> (str, str):
+        """
+        토픽모델링 + 감성 분류
+        """
 
         # 인풋 값 전처리
         target = ' '.join(self.text_tokenizer_morphs(target))
 
-        # KoBERT용 토크나이저 정의
-        bertmodel, vocab = get_pytorch_kobert_model(cachedir=".cache")
-        tok = nlp.data.BERTSPTokenizer(get_tokenizer(), vocab, lower=False)
-
         # Device 정의
         device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
-
-        # Model 정의
-        model = BERTClassifier(bertmodel, dr_rate=0.5)
-        model.load_state_dict(torch.load(self.model_path, map_location=torch.device('cpu')), strict=False)
 
         # topic 추출
         topics = self.get_modeling_topics(target=target)
@@ -117,7 +123,7 @@ class KeywordService:
         filtered_sentence = ' '.join(set(tokenized_sentence))
 
         # 감정 분류 수행
-        sentiments_lst = self.sentiment_prediction(filtered_sentence, tok, vocab, model, device)
+        sentiments_lst = self.sentiment_prediction(filtered_sentence, self.tok, self.vocab, self.model, device)
         sentiments = ', '.join(sentiments_lst)
 
         return topics, sentiments
@@ -189,13 +195,12 @@ class KeywordService:
         return sentiment
 
     def text_tokenizer_morphs(self, text):
-        result = []
-        tokenizer = BertTokenizer.from_pretrained('bert-base-multilingual-cased')
-        tokens_ko = tokenizer.tokenize(text)
+        # 텍스트 토큰화
+        tokens_ko = self.tokenizer.tokenize(text)
 
-        for w in tokens_ko:  # 불용어 제거 및 너무 짧은 단어 제외
-            if not w in self.stopwords and len(w) > 1:
-                result.append(w)
+        # 불용어 및 짧은 토큰 필터링
+        result = [w for w in tokens_ko if w not in self.stopwords and len(w) > 1]
+
         return result
 
     def get_topics(self, components, feature_names, n=5):
