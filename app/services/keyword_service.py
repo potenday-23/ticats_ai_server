@@ -1,6 +1,9 @@
 # Modules
+import time
+
 from fastapi import HTTPException
 import numpy as np
+from torch.autograd.profiler import record_function
 
 np.bool = np.bool_
 from collections import Counter
@@ -156,22 +159,22 @@ class KeywordService:
         else:
             print('return_type error')
 
-    def sentiment_prediction(self, target_sentence, tok, vocab, model, device):  # 감정 분류 수행
-        input_sentence = BERTDataset([[target_sentence, '0']], 0, 1, tok, vocab, 64, True, False)  # 모델에 적합하게 input 전처리
-        input_loader = torch.utils.data.DataLoader(input_sentence, batch_size=64, num_workers=5)
+    def sentiment_prediction(self, target_sentence, tok, vocab, model, device):
+        start_time = time.time()  # 시작 시간 기록
 
-        model.eval()  # 예측 수행
-        for batch_id, (token_ids, valid_length, segment_ids, label) in enumerate(input_loader):
-            token_ids = token_ids.long().to(device)
-            segment_ids = segment_ids.long().to(device)
+        # 모델에 적합하게 input 전처리
+        input_sentence = BERTDataset([[target_sentence, '0']], 0, 1, tok, vocab, 64, True, False)
+        input_loader = torch.utils.data.DataLoader(input_sentence, batch_size=1, num_workers=0, pin_memory=True)
 
-            valid_length = valid_length
+        model.eval()
+        with torch.no_grad():
+            for batch_id, (token_ids, valid_length, segment_ids, label) in enumerate(input_loader):
+                token_ids = token_ids.long().to(device)
+                segment_ids = segment_ids.long().to(device)
 
-            out = model(token_ids, valid_length, segment_ids)
+                out = model(token_ids, valid_length, segment_ids)
 
-            for i in out:
-                logits = i
-                logits = logits.detach().cpu().numpy()
+                logits = out[0].detach().cpu().numpy()
 
         top_two_indices = logits.argsort()[-2:][::-1]  # 예측 결과에서 확률이 높은 상위 두개의 클래스 저장
 
@@ -179,6 +182,10 @@ class KeywordService:
         emotion_map = ["공포", "놀람", "분노", "슬픔", "중립", "행복", "혐오"]
         sentiment.extend(emotion_map[i] for i in top_two_indices)
 
+        end_time = time.time()  # 끝 시간 기록
+        total_time = end_time - start_time  # 총 실행 시간 계산
+
+        print(f"Execution Time: {total_time} seconds")  # 실행 시간 출력
         return sentiment
 
     def text_tokenizer_morphs(self, text):
