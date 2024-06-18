@@ -24,7 +24,7 @@
    ```
 2. 라이브러리 설치(python 3.10버전)
    ```bash
-      pip install requirements.txt
+      pip install requirements2.txt
    ```
 3. 엘리스 미니 프로젝트 실행
     ```bash

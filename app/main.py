@@ -28,7 +28,6 @@ app = FastAPI(
 )
 
 
-# Router inclusion moved inside the function to avoid circular imports
 def include_routers(app):
     from app.routers import keyword_router, ocr_router, recommend_router
     app.include_router(keyword_router.router)
