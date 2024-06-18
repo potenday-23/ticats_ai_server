@@ -110,7 +110,7 @@ class KeywordService:
 
         # 한글 외 문자 및 중복 제거
         input_sentence = re.sub(r'[^ㄱ-ㅎㅏ-ㅣ가-힣 ]', ' ', topics)
-        tokenized_sentence = self.text_tokenizer_morphs(input_sentence, self.stopwords)
+        tokenized_sentence = self.text_tokenizer_morphs(input_sentence)
         filtered_sentence = ' '.join(set(tokenized_sentence))
 
         # 감정 분류 수행
