@@ -60,8 +60,7 @@ def content_recommender(base_df: pd.DataFrame, content_id_lst: List[int]) -> Lis
     # 코사인 유사도 측정
     count_vect = CountVectorizer(ngram_range=(1, 2), lowercase=False)
     genre_mat = count_vect.fit_transform(base_df['sentiment'])
-    genre_sim = cosine_similarity(genre_mat, genre_mat)
-    genre_sim_sorted_idx = genre_sim.argsort()[:, ::-1]
+    genre_sim_sorted_idx = cosine_similarity(genre_mat, genre_mat).argsort()[:, ::-1]
 
     # input작품들의 감정 키워드 표본 수집
     sentiment_candidates=[]
@@ -73,8 +72,7 @@ def content_recommender(base_df: pd.DataFrame, content_id_lst: List[int]) -> Lis
             sentiment_candidates.append(base_df.loc[idx, 'sentiment'].split(', ')[0])
             sentiment_candidates.append(base_df.loc[idx, 'sentiment'].split(', ')[1])
 
-    counter = Counter(sentiment_candidates)
-    recommend_sentiment = ', '.join([item[0].strip() for item in counter.most_common(2)])
+    recommend_sentiment = ', '.join([item[0].strip() for item in Counter(sentiment_candidates).most_common(2)])
     base_content = base_df[base_df['sentiment'] == recommend_sentiment].sample(n=1).index.values
 
     # base_content와 유사한 순으로 나열
