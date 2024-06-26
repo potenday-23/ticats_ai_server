@@ -5,6 +5,7 @@ import torch
 
 # Main Section
 class BERTClassifier(nn.Module):
+    
     def __init__(self,
                  bert,
                  hidden_size=768,
