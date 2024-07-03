@@ -26,4 +26,3 @@ venv
 
 # 용량이 큰 파일
 app/.cache
-ai/KoBERT_D2_E11_A92.pt

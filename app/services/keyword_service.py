@@ -46,7 +46,11 @@ class KeywordService:
         # Load the tokenizer once during initialization
         self.tokenizer = BertTokenizer.from_pretrained('bert-base-multilingual-cased')
         self.stopwords = STOP_WORDS
-        self.model_path = "/Users/rosie/PycharmProjects/ticats_ai_server/ai/KoBERT_D2_E11_A92.pt"
+        self.model_s3_url = "https://tickets2323.s3.ap-northeast-2.amazonaws.com/Ai/Kobert_ver1.pt"
+        self.model_path = "/tmp/KoBERT_D2_E11_A92.pt"  # 임시 저장 경로
+
+        # S3에서 모델 다운로드
+        self.download_model_from_s3(self.model_s3_url, self.model_path)
 
         # KoBERT용 토크나이저 정의
         self.bert_model, self.vocab = get_pytorch_kobert_model(cachedir=".cache")
@@ -55,6 +59,11 @@ class KeywordService:
         # 감정 분석 모델 로드
         self.model = BERTClassifier(self.bert_model, dr_rate=0.5)
         self.model.load_state_dict(torch.load(self.model_path, map_location=torch.device('cpu')), strict=False)
+
+    def download_model_from_s3(self, s3_url, local_path):
+        response = requests.get(s3_url)
+        with open(local_path, 'wb') as f:
+            f.write(response.content)
 
     def fetch_evaluations(self, url: str) -> str:
         """
