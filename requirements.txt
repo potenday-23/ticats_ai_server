@@ -55,6 +55,7 @@ orjson==3.10.6
 protobuf==5.27.2
 ujson==5.10.0
 PyYAML==6.0.1
+pandas==2.2.2
 
 # Natural Language Processing (NLP)
 gluonnlp==0.10.0
