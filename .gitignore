@@ -26,3 +26,6 @@ venv
 
 # 용량이 큰 파일
 app/.cache
+
+# Secret File
+.env
