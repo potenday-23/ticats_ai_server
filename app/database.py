@@ -14,3 +14,9 @@ Base = declarative_base()
 
 # 읽기 전용 세션 설정 (autocommit 제거)
 SessionReadOnly = sessionmaker(bind=engine, autoflush=False)
+def get_db():
+    db = SessionReadOnly()
+    try:
+        yield db
+    finally:
+        db.close()

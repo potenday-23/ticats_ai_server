@@ -6,13 +6,10 @@ import numpy as np
 from torch.autograd.profiler import record_function
 
 np.bool = np.bool_
-from collections import Counter
 
 import warnings;
 
 warnings.filterwarnings('ignore')
-from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.feature_extraction.text import CountVectorizer
 from torch.utils.data import Dataset
 from constants import STOP_WORDS
 import numpy as np
@@ -136,43 +133,6 @@ class KeywordService:
         sentiments = ', '.join(sentiments_lst)
 
         return topics, sentiments
-
-    def content_recommender(self, base_df, content_id_lst,
-                            return_type='return_id'):  # 다중 인풋 처리용, id를 리스트 형태로 넣으면 됨(=content_id_lst).
-        count_vect = CountVectorizer(min_df=0, ngram_range=(1, 2), lowercase=False)  # 유사도 측정을 위한 피처 백터화
-        genre_mat = count_vect.fit_transform(base_df['sentiment'])  # standard 인자 추가 가능
-
-        genre_sim = cosine_similarity(genre_mat, genre_mat)  # 코사인 유사도 측정
-        genre_sim_sorted_idx = genre_sim.argsort()[:, ::-1]  # 유사도가 높은 순으로 인덱스 나열(각 인덱스(작품)별로)
-
-        sentiment_candidates = []
-        for content_id in content_id_lst:
-            content_idx = base_df[base_df['culturalEventId'] == content_id].index.values
-            similar_indexes = genre_sim_sorted_idx[content_idx, :4]  # top3 만큼 가져옴(기준 인덱스 포함하여 4)
-            similar_indexes = similar_indexes[similar_indexes != content_idx].reshape(-1)
-            for idx in similar_indexes:
-                sentiment_candidates.append(base_df.loc[idx, 'sentiment'])  # 감정 추출
-
-        sentiment_candidates = ', '.join(sentiment_candidates).split(',')
-        counter = Counter(sentiment_candidates)
-        recommend_sentiment = ', '.join([item[0].strip() for item in counter.most_common(2)])  # 빈도 수 높은 감정 상위 2개 추출
-
-        base_content = base_df[base_df['sentiment'] == recommend_sentiment].sample(
-            n=1).index.values  # 같은 감정을 가진 작품 랜덤으로 선택
-        similar_indexes = genre_sim_sorted_idx[base_content, :]  # base와 비슷한 작품 추천
-        similar_indexes = similar_indexes[similar_indexes != content_idx].reshape(-1)
-
-        if return_type == 'return_id':  # id
-            idx_to_id_lst = []
-            for idx in similar_indexes:
-                idx_to_id_lst.append(base_df['culturalEventId'].iloc[idx])
-            return idx_to_id_lst
-
-        elif return_type == 'return_idx':  # index
-            return similar_indexes
-
-        else:
-            print('return_type error')
 
     def sentiment_prediction(self, target_sentence, tok, vocab, model, device):
         start_time = time.time()  # 시작 시간 기록

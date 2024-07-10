@@ -60,8 +60,16 @@
 │  └─routers
 ```
 
-## Git Convention
+## AI 협업 방법
+1. 가상환경 활성화(3.9버전)
+2. pip install -r requirements.txt 
+3. uvicorn main:app --reload
+4. 127.0.0.1:8000/docs 열기
+5. ocr 분석 실행
+6. run_ocr 잘 되는지 확인
+7. git push 또는 pr 올리기
 
+## Git Convention
 - github-flow를 따름
 - branch Convention
   ```angular2html

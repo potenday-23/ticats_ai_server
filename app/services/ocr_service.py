@@ -1,10 +1,8 @@
-# Fast-app
-from app.schemas.ocr_schema import OcrRequestSchema
-
-
 # Main Section
-def get_ocr_values(ocr_photo: OcrRequestSchema):
-    file = ocr_photo.file
+class OcrService:
+    def run_ocr(self):
+        self.other_function()
+        return "hello"
 
-    values = {"title": "title example"}
-    return values
+    def other_function(self):
+        pass

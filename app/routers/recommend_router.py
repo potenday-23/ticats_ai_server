@@ -5,10 +5,10 @@ import numpy as np
 from fastapi import APIRouter
 from fastapi.params import Query
 from typing import List
-from app.dependencies import get_db
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
+from app.database import get_db
 from app.services.recommend_service import RecommendService
 
 # Router
