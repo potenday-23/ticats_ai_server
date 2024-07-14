@@ -3,7 +3,6 @@ from pydantic import BaseModel
 
 from app.services.ocr_service import OcrService
 
-
 # Dependency injection function
 def get_ocr_service():
     return OcrService()

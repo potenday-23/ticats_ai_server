@@ -36,6 +36,9 @@ konlpy==0.6.0
 kobert @ git+https://git@github.com/SKTBrain/KoBERT.git@47a69af87928fc24e20f571fe10c3cc9dd9af9a3
 kobert-tokenizer @ git+https://github.com/SKTBrain/KoBERT.git@47a69af87928fc24e20f571fe10c3cc9dd9af9a3#subdirectory=kobert_hf
 
+# 티켓 정보 추출
+google-generativeai==0.5.4
+
 # AWS 및 클라우드 관련
 boto3==1.15.18
 botocore==1.18.18
