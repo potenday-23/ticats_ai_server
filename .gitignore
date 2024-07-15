@@ -28,4 +28,3 @@ venv
 app/.cache
 
 # Secret File
-.env
