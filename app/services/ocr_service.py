@@ -141,7 +141,7 @@ class OcrService:
         if infos:
             result = ast.literal_eval("{" + infos.group(1) + "}")
         else:
-            result = {'info': 'None'}
+            result = {}
 
         return result
 

@@ -57,4 +57,4 @@ jobs:
             docker rm ticats_ai || true
             docker image rm public.ecr.aws/h7p2f6d8/ticats_ai:latest || true
             docker pull public.ecr.aws/h7p2f6d8/ticats_ai:latest
-            docker run -d -p 8000:8000 --name ticats_ai -e DATABASE_URL="${{ secrets.DATABASE_URL }}" public.ecr.aws/h7p2f6d8/ticats_ai:latest
+            docker run -d -p 8000:8000 --name ticats_ai -e DATABASE_URL="${{ secrets.DATABASE_URL }}" -e NAVER_SECRET_KEY="${{ secrets.NAVER_SECRET_KEY }}" -e GEMINAI_SECRET_KEY="${{ secrets.GEMINAI_SECRET_KEY }}" public.ecr.aws/h7p2f6d8/ticats_ai:latest
