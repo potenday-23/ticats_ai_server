@@ -1,4 +1,6 @@
 # Config
+import os
+
 from app.config.exceptions import validation_exception_handler
 
 # Fast API
@@ -39,3 +41,5 @@ include_routers(app)
 
 # exception Handler
 app.add_exception_handler(RequestValidationError, validation_exception_handler)
+
+
