@@ -132,9 +132,10 @@ class OcrService:
         prompt1 = "다음은 공연티켓에 OCR을 수행한 결과입니다. 이 정보는 단어와 y좌표로 구성되어 있습니다."
         prompt2 = "여기에서 공연제목, 공연장소(건물이름), 공연날짜, 좌석정보에 해당하는 정보를 찾아주세요. 그리고 딕셔너리 형태로 알려주세요."
         prompt3 = "그리고 공연정보 딕셔너리 외에는 어떠한 문장도 답변에 포함하지 마세요"
+        prompt4 = "이때, 공연날짜의 양식은 'year-month-date' 입니다."
 
         # 정보 추출
-        response = self.model.generate_content(f"{prompt1}\n{ocr_result}\n{prompt2}{prompt3}")
+        response = self.model.generate_content(f"{prompt1}\n{ocr_result}\n{prompt2}\n{prompt4}\n{prompt3}")
 
         # 추출결과를 딕셔너리로 재구성
         infos = re.search(r'\{(.*?)\}', response.text)
