@@ -39,16 +39,14 @@ class OcrService:
         ticket_info_processed = self.ocr_result_processor(ticket_words)
         infos = self.info_extraction(ticket_info_processed)
         try:
-            corrected_seat_info = self.correct_seat_info(infos)
-            infos['좌석정보'] = corrected_seat_info
+            infos['좌석정보'] = self.correct_seat_info(infos)
         except:
+            # Exception1: 부적합한 결과가 드물게 발생 => 다시 수행
+            infos = self.info_extraction(ticket_info_processed)
             try:
-                # Exception1: 부적합한 결과가 드물게 발생 => 다시 수행
-                infos = self.info_extraction(ticket_info_processed)
-                corrected_seat_info = self.correct_seat_info(infos)
-                infos['좌석정보'] = corrected_seat_info
+                infos['좌석정보'] = self.correct_seat_info(infos)
             except:
-                # Exception2: 정보 없음으로 처리
+                # Exception2: 정보없음으로 처리
                 pass
         return infos
 
@@ -59,8 +57,11 @@ class OcrService:
         api_url = 'https://yhnf1pbln5.apigw.ntruss.com/custom/v1/29894/d66583da242cd4fcddc7c2c8b2e3a6a65692b0d9df8eb03bfea832e0a4d8f713/general'
         secret_key = NAVER_SECRET_KEY
 
+        input_format = image_content.split('.')[-1].lower()
+        if input_format not in ['jpg', 'jpeg', 'png', 'tif', 'tiff', 'pdf']:
+            raise ValueError(f"Unsupported file format: {input_format}, Supported formats are 'jpg', 'jpeg', 'png', 'tif', 'tiff', 'pdf'.")
         request_json = {
-            'images': [{'format': 'jpg', 'name': 'demo'}],
+            'images': [{'format': input_format, 'name': 'demo'}],
             'requestId': str(uuid.uuid4()),
             'version': 'V2',
             'timestamp': int(round(time.time() * 1000))
@@ -132,45 +133,34 @@ class OcrService:
         prompt1 = "다음은 공연티켓에 OCR을 수행한 결과입니다. 이 정보는 단어와 y좌표로 구성되어 있습니다."
         prompt2 = "여기에서 공연제목, 공연장소(건물이름), 공연날짜, 좌석정보에 해당하는 정보를 찾아주세요. 그리고 딕셔너리 형태로 알려주세요."
         prompt3 = "그리고 공연정보 딕셔너리 외에는 어떠한 문장도 답변에 포함하지 마세요"
-        prompt4 = "이때, 공연날짜의 양식은 'year-month-date' 입니다."
+        prompt4 = "공연날짜의 양식은 'year-month-date' 입니다."
+        prompt5 = "좌석정보는 '층, 블럭, 관, 구역, 열, 번, 스탠딩, 자유석, 비지정석' 중 일부가 포함된 요소만 해당합니다"
+        prompt6 = "좌석정보 내 단어들의 순서는 '층, 관, 블럭, 구역, 열, 번' 입니다."
+        prompt7 = "만약 좌석정보에서 '스탠딩'과 '스탠딩석' 이 포함된 단어가 모두 존재한다면, '스탠딩'이 포함된 단어만 남겨놓습니다."
+        prompt8 = "좌석정보는 여러 개의 좌석을 포함 가능합니다."
 
         # 정보 추출
-        response = self.model.generate_content(f"{prompt1}\n{ocr_result}\n{prompt2}\n{prompt4}\n{prompt3}")
+        response = self.model.generate_content(f"{prompt1}\n{ocr_result}\n{prompt2}\n{prompt4}\n{prompt3}\n{prompt4}\n{prompt5}\n{prompt6}\n{prompt7}\n{prompt8}")
 
         # 추출결과를 딕셔너리로 재구성
         infos = re.search(r'\{(.*?)\}', response.text)
         if infos:
             result = ast.literal_eval("{" + infos.group(1) + "}")
         else:
-            result = {}
+            result = {'info' : 'None'}
 
         return result
 
     def correct_seat_info(self, ticket_words):
         '''
-        좌석정보와 관련있는 키워드를 제외하고는 모두 제거
+        좌석정보가 비어있는 경우에 대응
         '''
-        if ticket_words['좌석정보'] != None:
-            seat_info = ticket_words['좌석정보']
-            patterns = [r"\d{1,2}\s?층",
-                        r"\w{1,3}블럭",
-                        r"스탠딩",
-                        r"\d{1,2}관",
-                        r"(?!딩)(?!층)\w{1,2}구역",
-                        r"(?!역)(?!구역)\w{1,3}열",
-                        r"자유석+$",
-                        r"\d{1,4}번",
-                        r"자유석",
-                        r"비지정석"]
-            matches = []
-            for pattern in patterns:
-                matches.extend(re.findall(pattern, seat_info))
-            mathces_unique = list(OrderedDict.fromkeys(matches))
-            seat_info_refined = ' '.join(mathces_unique)
-            if seat_info_refined == '':
-                seat_info_refined = '정보없음'
+        seat_info_refined = '정보없음'
 
-        else:
-            seat_info_refined = '정보없음'
+        if ticket_words['좌석정보'] != None:
+            if isinstance(ticket_words['좌석정보'], list):
+                seat_info_refined = ' '.join(ticket_words['좌석정보'])
+                if seat_info_refined == '':
+                    seat_info_refined = '정보없음'
 
         return seat_info_refined

@@ -1,4 +1,5 @@
 import pandas as pd
+import random
 from collections import Counter
 import warnings
 from sqlalchemy import select
@@ -22,7 +23,7 @@ class RecommendService:
         '''
         stmt = select(CulturalEvent.id, CulturalEvent.title, CulturalEvent.sentiment, CulturalEvent.topic)
         results = self.db.execute(stmt).all()
-        return pd.DataFrame(results, columns=["id", "title", "sentiment", "topic"])
+        return pd.DataFrame(results, columns=["id", "title", "topic"])
 
     def content_recommender(self, cultural_event_ids: List[int]) -> List[int]:
         '''
@@ -34,24 +35,15 @@ class RecommendService:
 
         # 코사인 유사도 측정
         count_vect = CountVectorizer(ngram_range=(1, 2), lowercase=False)
-        genre_mat = count_vect.fit_transform(base_df['sentiment'])
+        genre_mat = count_vect.fit_transform(base_df['topic'])
         genre_sim_sorted_idx = cosine_similarity(genre_mat, genre_mat).argsort()[:, ::-1]
 
-        # input작품들의 감정 키워드 표본 수집
-        sentiment_candidates = []
-        for content_id in cultural_event_ids:
-            content_idx = base_df[base_df['id'] == content_id].index.values
-            similar_indexes = genre_sim_sorted_idx[content_idx, :4]
-            similar_indexes = similar_indexes[similar_indexes != content_idx].reshape(-1)
-            for idx in similar_indexes:
-                sentiment_candidates.append(base_df.loc[idx, 'sentiment'].split(', ')[0])
-                sentiment_candidates.append(base_df.loc[idx, 'sentiment'].split(', ')[1])
+        # input 콘텐츠 중 랜덤으로 하나를 뽑아 추천 기준으로 함
+        target_id = random.sample(cultural_event_ids, 1)[0]
 
-        recommend_sentiment = ', '.join([item[0].strip() for item in Counter(sentiment_candidates).most_common(2)])
-        base_content = base_df[base_df['sentiment'] == recommend_sentiment].sample(n=1).index.values
-
-        # base_content와 유사한 순으로 나열
-        similar_indexes = genre_sim_sorted_idx[base_content, :]
+        # target 콘텐츠와 유사한 순으로 재정렬
+        content_idx = base_df[base_df['id'] == target_id].index.values
+        similar_indexes = genre_sim_sorted_idx[content_idx, :]
         similar_indexes = similar_indexes[similar_indexes != content_idx].reshape(-1)
 
         # culturalEventId값 반환
